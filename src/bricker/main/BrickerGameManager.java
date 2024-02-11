@@ -3,6 +3,7 @@ package bricker.main;
 import bricker.gameobjects.Paddle;
 import danogl.GameManager;
 import danogl.GameObject;
+import danogl.collisions.Layer;
 import danogl.gui.*;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
@@ -13,7 +14,6 @@ import bricker.gameobjects.Ball;
 import java.awt.*;
 import java.util.Random;
 
-//טל הייתה פה ממש
 public class BrickerGameManager extends GameManager {
 
 	// sizes
@@ -28,6 +28,8 @@ public class BrickerGameManager extends GameManager {
 	public static final String BALL_IMG_PATH = "assets/ball.png";
 	public static final String COLLISION_SOUND_PATH = "assets/blop_cut_silenced.wav";
 	public static final String PADDLE_IMG_PATH = "assets/paddle.png";
+	public static final String BACKGROUND_IMG_PATH = "assets/DARK_BG2_small.jpeg";
+
 
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -48,6 +50,9 @@ public class BrickerGameManager extends GameManager {
 
 		//create border
 		createBorders(windowDimensions);
+
+		//create background
+		createBackground(windowDimensions, imageReader);
 	}
 
 	private void createBall(ImageReader imageReader, SoundReader soundReader, WindowController windowController) {
@@ -86,7 +91,6 @@ public class BrickerGameManager extends GameManager {
 	}
 
 	private void createBorders(Vector2 windowDimensions) {
-//		GameObject border = new GameObject(Vector2.RIGHT, new Vector2(2, 2), null);
 		GameObject border_right = new GameObject(
 				new Vector2((int)windowDimensions.x() - BORDER_WIDTH, 0),
 				new Vector2(BORDER_WIDTH, (int)windowDimensions.y()),
@@ -102,6 +106,16 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(border_right);
 		gameObjects().addGameObject(border_left);
 		gameObjects().addGameObject(border_up);
+	}
+
+	private void createBackground(Vector2 windowDimensions, ImageReader imageReader) {
+		Renderable backgroundImage = imageReader.readImage(
+				BACKGROUND_IMG_PATH, false);
+		GameObject background = new GameObject(
+				Vector2.ZERO,
+				new Vector2((int)windowDimensions.x(),(int)windowDimensions.y()),
+				backgroundImage);
+		gameObjects().addGameObject(background, Layer.BACKGROUND);
 	}
 
 	public static void main(String[] args) {
