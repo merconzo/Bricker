@@ -4,11 +4,13 @@ import bricker.gameobjects.Paddle;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.gui.*;
+import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 import bricker.gameobjects.Ball;
 
+import java.awt.*;
 import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
@@ -18,15 +20,14 @@ public class BrickerGameManager extends GameManager {
 	private static final float BALL_SPEED = 150;
 	private static final int PADDLE_HEIGHT = 15;
 	private static final int PADDLE_WIDTH = 100;
+	private static final int PADDLE_DISTANCE = 20;
+	private static final int BORDER_WIDTH = 4;
 
 	// assets path
 	public static final String BALL_IMG_PATH = "assets/ball.png";
-	public static final String COLLISION_SOUND_PATH = "assets/Bubble5_4.wav";
+	public static final String COLLISION_SOUND_PATH = "assets/blop_cut_silenced.wav";
 	public static final String PADDLE_IMG_PATH = "assets/paddle.png";
 
-//	public BrickerGameManager() {
-//		super();
-//	}
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
 		super(windowTitle, windowDimensions);
@@ -76,7 +77,7 @@ public class BrickerGameManager extends GameManager {
 				inputListener);
 
 		paddle.setCenter(
-				new Vector2(windowDimensions.x()/2, (int)windowDimensions.y()-30));
+				new Vector2(windowDimensions.x()/2, (int)windowDimensions.y()-PADDLE_DISTANCE));
 		gameObjects().addGameObject(paddle);
 	}
 

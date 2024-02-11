@@ -8,7 +8,7 @@ import danogl.util.Vector2;
 import java.awt.event.KeyEvent;
 
 public class Paddle extends GameObject {
-    private static final float MOVEMENT_SPEED = 400;
+    private static final float MOVEMENT_SPEED = 500;
     private final UserInputListener inputListener;
 
     /**
