@@ -10,6 +10,7 @@ import java.awt.event.KeyEvent;
 public class Paddle extends GameObject {
     private static final float MOVEMENT_SPEED = 500;
     private final UserInputListener inputListener;
+    private final Vector2 windowDimensions;
 
     /**
      * Construct a new GameObject instance.
@@ -18,11 +19,13 @@ public class Paddle extends GameObject {
      * @param dimensions    Width and height in window coordinates.
      * @param renderable    The renderable representing the object. Can be null, in which case
      * @param inputListener input listener
+     * @param windowDimensions the dimensions of the game window
      */
     public Paddle(Vector2 topLeftCorner, Vector2 dimensions,
-				  Renderable renderable, UserInputListener inputListener) {
+				  Renderable renderable, UserInputListener inputListener, Vector2 windowDimensions) {
         super(topLeftCorner, dimensions, renderable);
         this.inputListener = inputListener;
+        this.windowDimensions = windowDimensions;
     }
 
     @Override
@@ -36,5 +39,11 @@ public class Paddle extends GameObject {
             movementDir = movementDir.add(Vector2.RIGHT);
         }
         setVelocity(movementDir.mult(MOVEMENT_SPEED));
+
+        if (getTopLeftCorner().x() < 0) {
+            setTopLeftCorner(new Vector2(this.windowDimensions.x(), getTopLeftCorner().y()));
+        } else if (getTopLeftCorner().x() > this.windowDimensions.x()) {
+            setTopLeftCorner(new Vector2(0, getTopLeftCorner().y()));
+        }
     }
 }

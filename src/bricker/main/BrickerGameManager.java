@@ -83,7 +83,7 @@ public class BrickerGameManager extends GameManager {
 				Vector2.ZERO,
 				new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT),
 				paddleImage,
-				inputListener);
+				inputListener, windowDimensions);
 
 		paddle.setCenter(
 				new Vector2(windowDimensions.x()/2, (int)windowDimensions.y()-PADDLE_DISTANCE));
