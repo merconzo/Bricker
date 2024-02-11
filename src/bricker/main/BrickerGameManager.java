@@ -44,6 +44,9 @@ public class BrickerGameManager extends GameManager {
 
 		//create paddle
 		createPaddle(imageReader, inputListener, windowDimensions);
+
+		//create border
+		createBorders(windowDimensions);
 	}
 
 	private void createBall(ImageReader imageReader, SoundReader soundReader, WindowController windowController) {
@@ -79,6 +82,25 @@ public class BrickerGameManager extends GameManager {
 		paddle.setCenter(
 				new Vector2(windowDimensions.x()/2, (int)windowDimensions.y()-PADDLE_DISTANCE));
 		gameObjects().addGameObject(paddle);
+	}
+
+	private void createBorders(Vector2 windowDimensions) {
+//		GameObject border = new GameObject(Vector2.RIGHT, new Vector2(2, 2), null);
+		GameObject border_right = new GameObject(
+				new Vector2((int)windowDimensions.x() - BORDER_WIDTH, 0),
+				new Vector2(BORDER_WIDTH, (int)windowDimensions.y()),
+				new RectangleRenderable(Color.CYAN));
+		GameObject border_left = new GameObject(
+				Vector2.ZERO,
+				new Vector2(BORDER_WIDTH, (int)windowDimensions.y()),
+				new RectangleRenderable(Color.CYAN));
+		GameObject border_up = new GameObject(
+				Vector2.ZERO,
+				new Vector2((int)windowDimensions.x(), BORDER_WIDTH),
+				new RectangleRenderable(Color.CYAN));
+		gameObjects().addGameObject(border_right);
+		gameObjects().addGameObject(border_left);
+		gameObjects().addGameObject(border_up);
 	}
 
 	public static void main(String[] args) {
