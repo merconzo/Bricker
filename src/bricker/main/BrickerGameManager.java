@@ -13,7 +13,7 @@ import bricker.gameobjects.Ball;
 import java.awt.*;
 import java.util.Random;
 
-//טל הייתה פה
+//טל הייתה פה ממש
 public class BrickerGameManager extends GameManager {
 
 	// sizes
