@@ -1,5 +1,8 @@
 package bricker.main;
 
+import bricker.brick_strategies.BasicCollisionStrategy;
+import bricker.brick_strategies.CollisionStrategy;
+import bricker.gameobjects.Brick;
 import bricker.gameobjects.Paddle;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -24,11 +27,15 @@ public class BrickerGameManager extends GameManager {
 	private static final int PADDLE_DISTANCE = 20;
 	private static final int BORDER_WIDTH = 4;
 
+	private static final int BRICK_HEIGHT = 15;
+
+
 	// assets path
 	public static final String BALL_IMG_PATH = "assets/ball.png";
 	public static final String COLLISION_SOUND_PATH = "assets/blop_cut_silenced.wav";
 	public static final String PADDLE_IMG_PATH = "assets/paddle.png";
 	public static final String BACKGROUND_IMG_PATH = "assets/DARK_BG2_small.jpeg";
+	public static final String BRICK_IMG_PATH = "assets/brick.png";
 
 
 
@@ -53,6 +60,10 @@ public class BrickerGameManager extends GameManager {
 
 		//create background
 		createBackground(windowDimensions, imageReader);
+
+		//addBrick
+		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy();
+		createBrick(windowDimensions, imageReader, Vector2.ZERO, basicCollisionStrategy);
 	}
 
 	private void createBall(ImageReader imageReader, SoundReader soundReader, WindowController windowController) {
@@ -118,6 +129,16 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(background, Layer.BACKGROUND);
 	}
 
+	private void createBrick(Vector2 windowDimensions, ImageReader imageReader,
+							 Vector2 topLeftCorner, CollisionStrategy collisionStrategy) {
+		Renderable brickImage = imageReader.readImage(
+				BRICK_IMG_PATH, false);
+		Brick brick = new Brick(
+				topLeftCorner, new Vector2(windowDimensions.x(), BRICK_HEIGHT),
+				brickImage, collisionStrategy);
+		gameObjects().addGameObject(brick);
+
+	}
 	public static void main(String[] args) {
 		GameManager gameManager = new BrickerGameManager(
 				"Bouncing Ball",
