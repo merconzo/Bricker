@@ -11,11 +11,26 @@ public class Brick extends GameObject {
 
     private final CollisionStrategy collisionStrategy;
 
+    /**
+     * Constructor for creating a Brick object.
+     *
+     * @param topLeftCorner    Position of the top-left corner of the brick.
+     * @param dimensions       Width and height of the brick.
+     * @param renderable       Renderable object representing the brick.
+     * @param collisionStrategy   Collision strategy associated with the brick.
+     */
+
     public Brick(Vector2 topLeftCorner, Vector2 dimensions,
                  Renderable renderable, CollisionStrategy collisionStrategy)  {
         super(topLeftCorner, dimensions, renderable);
         this.collisionStrategy = collisionStrategy;
     }
+    /**
+     * Method called when a collision occurs with this brick.
+     *
+     * @param other      The GameObject involved in the collision.
+     * @param collision  The details of the collision.
+     */
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {

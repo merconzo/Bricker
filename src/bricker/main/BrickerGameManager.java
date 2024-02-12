@@ -146,11 +146,20 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(background, Layer.BACKGROUND);
 	}
 
+	/**
+	 * Method to create bricks and add them to the game.
+	 *
+	 * @param windowDimensions  The dimensions of the game window.
+	 * @param imageReader       The image reader for loading brick images.
+	 * @param collisionStrategy The collision strategy for the bricks.
+	 */
 
 	private void createBricks(Vector2 windowDimensions, ImageReader imageReader,
 							 CollisionStrategy collisionStrategy) {
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
+
+		// Check if brickRows or brickColumn are null, and assign default values if necessary
 		if (brickRows == null || brickColumn == null) {
 			this.brickRows = DEFAULT_BRICK_ROW;
 			this.brickColumn = DEFAULT_BRICK_COLLUMN;
