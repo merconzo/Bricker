@@ -155,12 +155,12 @@ public class BrickerGameManager extends GameManager {
 			this.brickRows = DEFAULT_BRICK_ROW;
 			this.brickColumn = DEFAULT_BRICK_COLLUMN;
 		}
-		float brickWidth = (windowDimensions.x()-2*BORDER_WIDTH) / this.brickColumn;
+		float brickWidth = ((windowDimensions.x()- (2 * BORDER_WIDTH) - this.brickColumn - 2) / this.brickColumn);
 		Vector2 brickDimensions = new Vector2(brickWidth, BRICK_HEIGHT);
 		for (int i = 0; i < this.brickRows; i++) {
-			float brickLeftY = BRICK_HEIGHT*i + BORDER_WIDTH;
+			float brickLeftY = BRICK_HEIGHT * i + BORDER_WIDTH + (3 * i);
 			for (int j = 0; j < this.brickColumn; j++) {
-				Vector2 topLeftCorner = new Vector2(j*brickWidth + BORDER_WIDTH, brickLeftY);
+				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j, brickLeftY);
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
 						brickImage, collisionStrategy);
@@ -175,7 +175,7 @@ public class BrickerGameManager extends GameManager {
 	public static void main(String[] args) {
 		GameManager gameManager = new BrickerGameManager(
 				"Bouncing Ball",
-				new Vector2(700, 500));
+				new Vector2(1400, 1000));
 		gameManager.run();
 	}
 }
