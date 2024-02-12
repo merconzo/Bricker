@@ -29,6 +29,11 @@ public class BrickerGameManager extends GameManager {
 
 	private static final int BRICK_HEIGHT = 15;
 
+	private static final Integer DEFAULT_BRICK_ROW = 7;
+	private static final Integer DEFAULT_BRICK_COLLUMN = 8;
+
+
+
 
 	// assets path
 	public static final String BALL_IMG_PATH = "assets/ball.png";
@@ -38,14 +43,26 @@ public class BrickerGameManager extends GameManager {
 	public static final String BRICK_IMG_PATH = "assets/brick.png";
 
 
+	//bricksnumber
+	private Integer brickRows;
+	private Integer brickColumn;
+
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
-		super(windowTitle, windowDimensions);
+		this(windowTitle, windowDimensions, null, null);
 	}
+
+	public BrickerGameManager(String windowTitle, Vector2 windowDimensions, Integer brickRows, Integer brickColumn) {
+		super(windowTitle, windowDimensions);
+		this.brickRows = brickRows;
+		this.brickColumn = brickColumn;
+	}
+
 
 	@Override
 	public void initializeGame(ImageReader imageReader, SoundReader soundReader,
-							   UserInputListener inputListener, WindowController windowController) {
+							   UserInputListener inputListener, WindowController windowController)
+							   {
 		super.initializeGame(imageReader, soundReader, inputListener, windowController);
 		Vector2 windowDimensions = windowController.getWindowDimensions();
 
@@ -61,9 +78,9 @@ public class BrickerGameManager extends GameManager {
 		//create background
 		createBackground(windowDimensions, imageReader);
 
-		//addBrick
+		//addBricks
 		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy();
-		createBrick(windowDimensions, imageReader, Vector2.ZERO, basicCollisionStrategy);
+		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
 	}
 
 	private void createBall(ImageReader imageReader, SoundReader soundReader, WindowController windowController) {
@@ -129,16 +146,32 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(background, Layer.BACKGROUND);
 	}
 
-	private void createBrick(Vector2 windowDimensions, ImageReader imageReader,
-							 Vector2 topLeftCorner, CollisionStrategy collisionStrategy) {
+
+	private void createBricks(Vector2 windowDimensions, ImageReader imageReader,
+							 CollisionStrategy collisionStrategy) {
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
-		Brick brick = new Brick(
-				topLeftCorner, new Vector2(windowDimensions.x(), BRICK_HEIGHT),
-				brickImage, collisionStrategy);
-		gameObjects().addGameObject(brick);
+		if (brickRows == null || brickColumn == null) {
+			this.brickRows = DEFAULT_BRICK_ROW;
+			this.brickColumn = DEFAULT_BRICK_COLLUMN;
+		}
+		float brickWidth = (windowDimensions.x()-2*BORDER_WIDTH) / this.brickColumn;
+		Vector2 brickDimensions = new Vector2(brickWidth, BRICK_HEIGHT);
+		for (int i = 0; i < this.brickRows; i++) {
+			float brickLeftY = BRICK_HEIGHT*i + BORDER_WIDTH;
+			for (int j = 0; j < this.brickColumn; j++) {
+				Vector2 topLeftCorner = new Vector2(j*brickWidth + BORDER_WIDTH, brickLeftY);
+				Brick brick = new Brick(
+						topLeftCorner, brickDimensions,
+						brickImage, collisionStrategy);
+				gameObjects().addGameObject(brick);
 
+			}
+
+		}
 	}
+
+
 	public static void main(String[] args) {
 		GameManager gameManager = new BrickerGameManager(
 				"Bouncing Ball",
