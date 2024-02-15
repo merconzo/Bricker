@@ -13,7 +13,6 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 import bricker.gameobjects.Ball;
-
 import java.awt.*;
 import java.util.Random;
 
@@ -68,7 +67,7 @@ public class BrickerGameManager extends GameManager {
 		//create paddle
 		createPaddle(imageReader, inputListener, windowDimensions);
 
-		//create border
+		//create borders
 		createBorders(windowDimensions);
 
 		//create background
