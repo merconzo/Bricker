@@ -26,13 +26,9 @@ public class BrickerGameManager extends GameManager {
 	private static final int PADDLE_WIDTH = 100;
 	private static final int PADDLE_DISTANCE = 20;
 	private static final int BORDER_WIDTH = 4;
-
 	private static final int BRICK_HEIGHT = 15;
-
 	private static final Integer DEFAULT_BRICK_ROW = 7;
 	private static final Integer DEFAULT_BRICK_COLLUMN = 8;
-
-
 
 
 	// assets path
@@ -49,7 +45,7 @@ public class BrickerGameManager extends GameManager {
 
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
-		this(windowTitle, windowDimensions, null, null);
+		this(windowTitle, windowDimensions, DEFAULT_BRICK_ROW, DEFAULT_BRICK_COLLUMN);
 	}
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions, Integer brickRows, Integer brickColumn) {
@@ -159,11 +155,7 @@ public class BrickerGameManager extends GameManager {
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
 
-		// Check if brickRows or brickColumn are null, and assign default values if necessary
-		if (brickRows == null || brickColumn == null) {
-			this.brickRows = DEFAULT_BRICK_ROW;
-			this.brickColumn = DEFAULT_BRICK_COLLUMN;
-		}
+
 		float brickWidth = ((windowDimensions.x()- (2 * BORDER_WIDTH) - this.brickColumn - 2) / this.brickColumn);
 		Vector2 brickDimensions = new Vector2(brickWidth, BRICK_HEIGHT);
 		for (int i = 0; i < this.brickRows; i++) {
@@ -184,7 +176,7 @@ public class BrickerGameManager extends GameManager {
 	public static void main(String[] args) {
 		GameManager gameManager = new BrickerGameManager(
 				"Bouncing Ball",
-				new Vector2(1400, 1000), 20, 10);
+				new Vector2(700, 500), 4, 3);
 		gameManager.run();
 	}
 }
