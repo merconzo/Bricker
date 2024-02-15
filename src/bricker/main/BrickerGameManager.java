@@ -30,17 +30,20 @@ public class BrickerGameManager extends GameManager {
 	private static final Integer DEFAULT_BRICK_COLLUMN = 8;
 
 
-	// assets path
+	// assets paths
 	public static final String BALL_IMG_PATH = "assets/ball.png";
 	public static final String COLLISION_SOUND_PATH = "assets/blop_cut_silenced.wav";
 	public static final String PADDLE_IMG_PATH = "assets/paddle.png";
 	public static final String BACKGROUND_IMG_PATH = "assets/DARK_BG2_small.jpeg";
 	public static final String BRICK_IMG_PATH = "assets/brick.png";
 
-
-	//bricksnumber
+	// bricks number
 	private Integer brickRows;
 	private Integer brickColumn;
+
+	// fields
+	private WindowController windowController;
+	private Vector2 windowDimensions;
 
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -59,7 +62,8 @@ public class BrickerGameManager extends GameManager {
 							   UserInputListener inputListener, WindowController windowController)
 							   {
 		super.initializeGame(imageReader, soundReader, inputListener, windowController);
-		Vector2 windowDimensions = windowController.getWindowDimensions();
+		this.windowController = windowController;
+		this.windowDimensions = windowController.getWindowDimensions();
 
 		// add ball
 		createBall(imageReader, soundReader, windowController);
@@ -76,6 +80,12 @@ public class BrickerGameManager extends GameManager {
 		//addBricks
 		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy();
 		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
+	}
+
+	@Override
+	public void update(float deltaTime) {
+		super.update(deltaTime);
+
 	}
 
 	private void createBall(ImageReader imageReader, SoundReader soundReader, WindowController windowController) {
