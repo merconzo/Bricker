@@ -29,6 +29,9 @@ public class BrickerGameManager extends GameManager {
 	private static final Integer DEFAULT_BRICK_ROW = 7;
 	private static final Integer DEFAULT_BRICK_COLLUMN = 8;
 
+	// Layers
+	private static final int BRICK_LAYER = Layer.STATIC_OBJECTS;
+
 
 	// assets paths
 	public static final String BALL_IMG_PATH = "assets/ball.png";
@@ -36,6 +39,11 @@ public class BrickerGameManager extends GameManager {
 	public static final String PADDLE_IMG_PATH = "assets/paddle.png";
 	public static final String BACKGROUND_IMG_PATH = "assets/DARK_BG2_small.jpeg";
 	public static final String BRICK_IMG_PATH = "assets/brick.png";
+
+	// GUI
+	private static final String WINDOW_TITLE = "BRICKER!";
+	private static final int WINDOW_X_DIMS = 700;
+	private static final int WINDOW_Y_DIMS = 500;
 
 	// bricks number
 	private Integer brickRows;
@@ -80,7 +88,7 @@ public class BrickerGameManager extends GameManager {
 
 		//addBricks
 		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects());
-		createBricks(windowDimensions, imageReader, basicCollisionStrategy, Layer.STATIC_OBJECTS);
+		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
 	}
 
 	@Override
@@ -177,7 +185,7 @@ public class BrickerGameManager extends GameManager {
 	 *
 	 */
 	private void createBricks(Vector2 windowDimensions, ImageReader imageReader,
-							 CollisionStrategy collisionStrategy, int bricklayer) {
+							 CollisionStrategy collisionStrategy) {
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
 
@@ -190,8 +198,8 @@ public class BrickerGameManager extends GameManager {
 				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY);
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
-						brickImage, collisionStrategy, bricklayer);
-				gameObjects().addGameObject(brick, bricklayer);
+						brickImage, collisionStrategy, BRICK_LAYER);
+				gameObjects().addGameObject(brick, BRICK_LAYER);
 
 			}
 
@@ -201,8 +209,8 @@ public class BrickerGameManager extends GameManager {
 
 	public static void main(String[] args) {
 		GameManager gameManager = new BrickerGameManager(
-				"Bouncing Ball",
-				new Vector2(700, 500), 4, 3);
+				WINDOW_TITLE,
+				new Vector2(WINDOW_X_DIMS, WINDOW_Y_DIMS));
 		gameManager.run();
 	}
 }
