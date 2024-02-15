@@ -42,6 +42,7 @@ public class BrickerGameManager extends GameManager {
 	private Integer brickColumn;
 
 	// fields
+	private Ball ball;
 	private WindowController windowController;
 	private Vector2 windowDimensions;
 
@@ -85,14 +86,35 @@ public class BrickerGameManager extends GameManager {
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
+		checkForGameEnd();
+	}
 
+	private void checkForGameEnd() {
+		double ballHeight = ball.getCenter().y();
+
+		String prompt = "";
+		if(ballHeight < 0) {
+			//we lost
+			prompt = "You win!";
+		}
+		if(ballHeight > windowDimensions.y()) {
+			//we win
+			prompt = "You Lose!";
+		}
+		if(!prompt.isEmpty()) {
+			prompt += " Play again?";
+			if(windowController.openYesNoDialog(prompt))
+				windowController.resetGame();
+			else
+				windowController.closeWindow();
+		}
 	}
 
 	private void createBall(ImageReader imageReader, SoundReader soundReader, WindowController windowController) {
 		Renderable ballImage =
 				imageReader.readImage(BALL_IMG_PATH, true);
 		Sound collisionSound = soundReader.readSound(COLLISION_SOUND_PATH);
-		Ball ball = new Ball(
+		this.ball = new Ball(
 				Vector2.ZERO, new Vector2(BALL_RADIUS, BALL_RADIUS), ballImage, collisionSound);
 
 		Vector2 windowDimensions = windowController.getWindowDimensions();
