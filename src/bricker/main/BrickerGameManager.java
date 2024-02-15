@@ -158,7 +158,6 @@ public class BrickerGameManager extends GameManager {
 	 * @param imageReader       The image reader for loading brick images.
 	 * @param collisionStrategy The collision strategy for the bricks.
 	 */
-
 	private void createBricks(Vector2 windowDimensions, ImageReader imageReader,
 							 CollisionStrategy collisionStrategy) {
 		Renderable brickImage = imageReader.readImage(
