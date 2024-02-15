@@ -44,6 +44,7 @@ public class BrickerGameManager extends GameManager {
 	private static final String WINDOW_TITLE = "BRICKER!";
 	private static final int WINDOW_X_DIMS = 700;
 	private static final int WINDOW_Y_DIMS = 500;
+	private static final Color BORDER_COLOR = Color.CYAN;
 
 	// bricks number
 	private Integer brickRows;
@@ -89,6 +90,7 @@ public class BrickerGameManager extends GameManager {
 		//addBricks
 		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects());
 		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
+
 	}
 
 	@Override
@@ -100,9 +102,12 @@ public class BrickerGameManager extends GameManager {
 	private void checkForGameEnd() {
 		double ballHeight = ball.getCenter().y();
 
-		String prompt = "";
+		String prompt = "";  // TODO: change to update life counter
 		if(ballHeight > windowDimensions.y()) {
 			prompt = "You Lose!";
+		}
+		if (Brick.totalNumberOfBricks == 0) {
+			prompt = "You Win!";
 		}
 		if(!prompt.isEmpty()) {
 			prompt += " Play again?";
@@ -152,15 +157,15 @@ public class BrickerGameManager extends GameManager {
 		GameObject border_right = new GameObject(
 				new Vector2((int)windowDimensions.x() - BORDER_WIDTH, 0),
 				new Vector2(BORDER_WIDTH, (int)windowDimensions.y()),
-				new RectangleRenderable(Color.CYAN));
+				new RectangleRenderable(BORDER_COLOR));
 		GameObject border_left = new GameObject(
 				Vector2.ZERO,
 				new Vector2(BORDER_WIDTH, (int)windowDimensions.y()),
-				new RectangleRenderable(Color.CYAN));
+				new RectangleRenderable(BORDER_COLOR));
 		GameObject border_up = new GameObject(
 				Vector2.ZERO,
 				new Vector2((int)windowDimensions.x(), BORDER_WIDTH),
-				new RectangleRenderable(Color.CYAN));
+				new RectangleRenderable(BORDER_COLOR));
 		gameObjects().addGameObject(border_right);
 		gameObjects().addGameObject(border_left);
 		gameObjects().addGameObject(border_up);
@@ -204,6 +209,7 @@ public class BrickerGameManager extends GameManager {
 			}
 
 		}
+
 	}
 
 

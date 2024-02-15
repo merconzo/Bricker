@@ -15,6 +15,7 @@ API CHANGES:
 Brick -
 - brickLayer - it's important to implement in the constructor the Layer that brick going to be in to send it to
  the collision strategy in case we would like to delete it.
+- totalNumberOfBricks - allows to follow the current number of bricks in the game.
 
 
 
