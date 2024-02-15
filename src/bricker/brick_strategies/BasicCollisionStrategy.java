@@ -15,7 +15,7 @@ public class BasicCollisionStrategy implements CollisionStrategy {
     }
 
     @Override
-    public void onCollision(GameObject object1, GameObject object2) {
-        this.gameObjects.removeGameObject(object1, Layer.STATIC_OBJECTS);
+    public void onCollision(GameObject object1, GameObject object2, int object1Layer) {
+        this.gameObjects.removeGameObject(object1, object1Layer);
     }
 }

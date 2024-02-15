@@ -79,7 +79,7 @@ public class BrickerGameManager extends GameManager {
 
 		//addBricks
 		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects());
-		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
+		createBricks(windowDimensions, imageReader, basicCollisionStrategy, Layer.STATIC_OBJECTS);
 	}
 
 	@Override
@@ -159,7 +159,7 @@ public class BrickerGameManager extends GameManager {
 	 * @param collisionStrategy The collision strategy for the bricks.
 	 */
 	private void createBricks(Vector2 windowDimensions, ImageReader imageReader,
-							 CollisionStrategy collisionStrategy) {
+							 CollisionStrategy collisionStrategy, int brickLayer) {
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
 
@@ -172,8 +172,8 @@ public class BrickerGameManager extends GameManager {
 				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY);
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
-						brickImage, collisionStrategy);
-				gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
+						brickImage, collisionStrategy, brickLayer);
+				gameObjects().addGameObject(brick, brickLayer);
 
 			}
 

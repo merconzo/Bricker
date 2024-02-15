@@ -3,6 +3,7 @@ package bricker.gameobjects;
 import bricker.brick_strategies.CollisionStrategy;
 import danogl.GameObject;
 import danogl.collisions.Collision;
+import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
@@ -10,6 +11,7 @@ public class Brick extends GameObject {
 
 
     private final CollisionStrategy collisionStrategy;
+    private final int brickLayer;
 
     /**
      * Constructor for creating a Brick object.
@@ -20,9 +22,10 @@ public class Brick extends GameObject {
      * @param collisionStrategy   Collision strategy associated with the brick.
      */
     public Brick(Vector2 topLeftCorner, Vector2 dimensions,
-                 Renderable renderable, CollisionStrategy collisionStrategy)  {
+                 Renderable renderable, CollisionStrategy collisionStrategy, int brickLayer)  {
         super(topLeftCorner, dimensions, renderable);
         this.collisionStrategy = collisionStrategy;
+        this.brickLayer = brickLayer;
     }
 
     /**
@@ -34,7 +37,7 @@ public class Brick extends GameObject {
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        this.collisionStrategy.onCollision(this, other);
+        this.collisionStrategy.onCollision(this, other, brickLayer);
 
     }
 }
