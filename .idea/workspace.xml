@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1ef45ef4-9cd2-439f-8c96-f2cec3c737ef" name="Changes" comment="brick neelam wht collision">
+      <change beforePath="$PROJECT_DIR$/README" beforeDir="false" afterPath="$PROJECT_DIR$/README" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bricker/brick_strategies/BasicCollisionStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bricker/brick_strategies/BasicCollisionStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bricker/brick_strategies/CollisionStrategy.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bricker/brick_strategies/CollisionStrategy.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bricker/gameobjects/Brick.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bricker/gameobjects/Brick.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/bricker/main/BrickerGameManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/bricker/main/BrickerGameManager.java" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Interface" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4
+}</component>
+  <component name="ProjectId" id="2boMZSMLF5a5akzAhhpNUqix2o2" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.BouncingBallGameManager.executor&quot;: &quot;Run&quot;,
+    &quot;Application.BrickerGameManager.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/tal4t/JAVA PROJECTS/OOP/library/DanoGameLab.jar&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.keymap&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="jdk-11.0.21-corretto-11.0.21-f644763e9732-97de7592" />
+        <option value="jdk-21.0.1-openjdk-21.0.1-f644763e9732-f98dd351" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1ef45ef4-9cd2-439f-8c96-f2cec3c737ef" name="Changes" comment="" />
+      <created>1706877034418</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1706877034418</updated>
+      <workItem from="1707312127227" duration="8976000" />
+      <workItem from="1707652854565" duration="79000" />
+      <workItem from="1707652942908" duration="5208000" />
+      <workItem from="1707664392464" duration="97000" />
+      <workItem from="1707664496812" duration="128000" />
+      <workItem from="1707664631490" duration="32000" />
+      <workItem from="1707664673967" duration="58000" />
+      <workItem from="1707664749512" duration="283000" />
+      <workItem from="1707665080627" duration="94000" />
+      <workItem from="1707665214591" duration="335000" />
+      <workItem from="1707665581753" duration="23255000" />
+      <workItem from="1708000356151" duration="4759000" />
+    </task>
+    <task id="LOCAL‎-00001" summary="הייתי פה">
+      <option name="closed" value="true" />
+      <created>1707666181246</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL‎-00001" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707666181246</updated>
+    </task>
+    <task id="LOCAL‎-00002" summary="הייתי פה">
+      <option name="closed" value="true" />
+      <created>1707666281525</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL‎-00002" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707666281525</updated>
+    </task>
+    <task id="LOCAL‎-00003" summary="i put the background">
+      <option name="closed" value="true" />
+      <created>1707671201732</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL‎-00003" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707671201732</updated>
+    </task>
+    <task id="LOCAL‎-00004" summary="עשיתי שהפדל יכנס למסך מחדש אם יצא, בשביל זה הוספתי את הwindowdimensions לבנאי של הפדל">
+      <option name="closed" value="true" />
+      <created>1707672790615</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL‎-00004" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707672790615</updated>
+    </task>
+    <task id="LOCAL‎-00005" summary="Brick class&#10;CollisionStrategy interface&#10;BasicCollisionStrategy class">
+      <option name="closed" value="true" />
+      <created>1707742061881</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL‎-00005" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707742061881</updated>
+    </task>
+    <task id="LOCAL‎-00006" summary="add many bricks">
+      <option name="closed" value="true" />
+      <created>1707749158962</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL‎-00006" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707749158962</updated>
+    </task>
+    <task id="LOCAL‎-00007" summary="some cosmetic brick changes">
+      <option name="closed" value="true" />
+      <created>1707759791148</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL‎-00007" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707759791148</updated>
+    </task>
+    <task id="LOCAL‎-00008" summary="notes">
+      <option name="closed" value="true" />
+      <created>1707760266112</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL‎-00008" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707760266112</updated>
+    </task>
+    <task id="LOCAL‎-00009" summary="changed the Brick Layer">
+      <option name="closed" value="true" />
+      <created>1707760602995</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL‎-00009" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1707760602995</updated>
+    </task>
+    <task id="LOCAL‎-00010" summary="some corrections in brick">
+      <option name="closed" value="true" />
+      <created>1708000942348</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL‎-00010" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1708000942348</updated>
+    </task>
+    <task id="LOCAL‎-00011" summary="brick neelam wht collision">
+      <option name="closed" value="true" />
+      <created>1708006318690</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL‎-00011" />
+      <option name="project" value="LOCAL‎" />
+      <updated>1708006318690</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="הייתי פה" />
+    <MESSAGE value="i put the background" />
+    <MESSAGE value="עשיתי שהפדל יכנס למסך מחדש אם יצא, בשביל זה הוספתי את הwindowdimensions לבנאי של הפדל" />
+    <MESSAGE value="Brick class&#10;CollisionStrategy interface&#10;BasicCollisionStrategy class" />
+    <MESSAGE value="add many bricks" />
+    <MESSAGE value="some cosmetic brick changes" />
+    <MESSAGE value="notes" />
+    <MESSAGE value="changed the Brick Layer" />
+    <MESSAGE value="some corrections in brick" />
+    <MESSAGE value="brick neelam wht collision" />
+    <option name="LAST_COMMIT_MESSAGE" value="brick neelam wht collision" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
