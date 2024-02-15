@@ -191,7 +191,7 @@ public class BrickerGameManager extends GameManager {
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
 						brickImage, collisionStrategy, bricklayer);
-				gameObjects().addGameObject(brick, Layer.STATIC_OBJECTS);
+				gameObjects().addGameObject(brick, bricklayer);
 
 			}
 
