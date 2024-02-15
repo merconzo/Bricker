@@ -78,7 +78,7 @@ public class BrickerGameManager extends GameManager {
 		createBackground(windowDimensions, imageReader);
 
 		//addBricks
-		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy();
+		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects());
 		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
 	}
 
