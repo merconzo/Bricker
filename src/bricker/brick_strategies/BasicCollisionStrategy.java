@@ -5,17 +5,16 @@ import danogl.collisions.GameObjectCollection;
 import danogl.collisions.Layer;
 
 public class BasicCollisionStrategy implements CollisionStrategy {
-    private GameObjectCollection gameObjects;
+    protected GameObjectCollection gameObjects;
+    protected int object1Layer;
 
-    public BasicCollisionStrategy (GameObjectCollection gameObjects){
+    public BasicCollisionStrategy(GameObjectCollection gameObjects, int object1Layer) {
         this.gameObjects = gameObjects;
-    }
-
-    public BasicCollisionStrategy() {
+        this.object1Layer = object1Layer;
     }
 
     @Override
-    public void onCollision(GameObject object1, GameObject object2, int object1Layer) {
-        this.gameObjects.removeGameObject(object1, object1Layer);
+    public void onCollision(GameObject object1, GameObject object2) {
+        this.gameObjects.removeGameObject(object1, this.object1Layer);
     }
 }

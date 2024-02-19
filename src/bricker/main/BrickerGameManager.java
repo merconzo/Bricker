@@ -2,6 +2,7 @@ package bricker.main;
 
 import bricker.brick_strategies.BasicCollisionStrategy;
 import bricker.brick_strategies.CollisionStrategy;
+import bricker.brick_strategies.PuckCollisionStrategy;
 import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -11,10 +12,10 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
-import danogl.util.Counter;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
@@ -60,6 +61,7 @@ public class BrickerGameManager extends GameManager {
 	private Vector2 windowDimensions;
 	private Ball ball;
 	private LifeNumericCounter lifeNumericCounter;
+	private ArrayList<Ball> extraBallsList = new ArrayList<>();
 
 	private UserInputListener inputListener;
 
@@ -85,10 +87,10 @@ public class BrickerGameManager extends GameManager {
 		this.windowDimensions = windowController.getWindowDimensions();
 		this.inputListener = inputListener;
 
-		// add ball
-		createBall(imageReader, soundReader, windowController);
+		// add mainBall
+	   createMainBall(imageReader, soundReader);
 
-		// create paddle
+	   // create paddle
 		createPaddle(imageReader, inputListener, windowDimensions);
 		//create paddle
 		createPaddle(imageReader, this.inputListener, windowDimensions);
@@ -100,7 +102,7 @@ public class BrickerGameManager extends GameManager {
 		createBackground(windowDimensions, imageReader);
 
 		// add Bricks
-		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects());
+		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects(), BRICK_LAYER);
 		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
 
 		// add life counter
@@ -110,16 +112,27 @@ public class BrickerGameManager extends GameManager {
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
-		checkForFallingBall();
+		checkForFallingBall(this.ball);
+		for (Ball ball : extraBallsList) {
+                checkForFallingBall(ball);
+		}
 		checkForGameEnd();
+
+
 	}
 
-	private void checkForFallingBall() {
+	private void checkForFallingBall(Ball ball) {
 		double ballHeight = ball.getCenter().y();
 		if(ballHeight > windowDimensions.y()) {
+			if (extraBallsList.contains(ball)) {
+				gameObjects().removeGameObject(ball);
+				extraBallsList.remove(ball);
+			}
+			else {
 			this.lifeNumericCounter.minusLifeCount();
-			setBallToCenter();
+			setBallToCenter(windowDimensions.mult(0.5f), ball);}
 		}
+
 	}
 
 	private void checkForGameEnd() {
@@ -140,22 +153,24 @@ public class BrickerGameManager extends GameManager {
 		}
 	}
 
-	private void createBall(ImageReader imageReader, SoundReader soundReader, WindowController windowController) {
-		Renderable ballImage =
-				imageReader.readImage(BALL_IMG_PATH, true);
+
+	private void createMainBall(ImageReader imageReader, SoundReader soundReader){
+		Renderable ballImage = imageReader.readImage(BALL_IMG_PATH, true);
 		Sound collisionSound = soundReader.readSound(COLLISION_SOUND_PATH);
-		this.ball = new Ball(
-				Vector2.ZERO, new Vector2(BALL_RADIUS, BALL_RADIUS), ballImage, collisionSound);
-
-		Vector2 windowDimensions = windowController.getWindowDimensions();
-
+		this.ball = createBall(ballImage, collisionSound, windowDimensions, BALL_RADIUS, windowDimensions.mult(0.5f));
 		gameObjects().addGameObject(ball);
-		setBallToCenter();
+	}
+	private Ball createBall(Renderable ballImage, Sound collisionSound, Vector2 windowDimensions, int ballRadius,
+							Vector2 center) {
+		Ball ball = new Ball(
+				Vector2.ZERO, new Vector2(ballRadius, ballRadius), ballImage, collisionSound);
+		setBallToCenter(center, ball);
+		return ball;
 	}
 
-	private void setBallToCenter() {
+	private void setBallToCenter(Vector2 center, Ball ball) {
 		// center location
-		ball.setCenter(windowDimensions.mult(0.5f));
+		ball.setCenter(center);
 		// random direction
 		float ballVelX = BALL_SPEED;
 		float ballVelY = BALL_SPEED;
