@@ -24,13 +24,13 @@ public class BrickerGameManager extends GameManager {
 	private static final float BALL_SPEED = 150;
 	private static final int PADDLE_HEIGHT = 15;
 	private static final int PADDLE_WIDTH = 100;
-	private static final int PADDLE_DISTANCE = 30;
 	private static final int BORDER_WIDTH = 4;
 	private static final int BRICK_HEIGHT = 15;
 	private static final int DEFAULT_BRICK_ROW = 7;
 	private static final int DEFAULT_BRICK_COLUMN = 8;
 	private static final int LIFE_COUNTER_SIZE = 20;
 	private static final int COUNTER_DISTANCE = 10;
+	private static final int PADDLE_DISTANCE = LIFE_COUNTER_SIZE + 3 * COUNTER_DISTANCE;
 
 	// Layers
 	private static final int BRICK_LAYER = Layer.STATIC_OBJECTS;
@@ -60,6 +60,7 @@ public class BrickerGameManager extends GameManager {
 	private Vector2 windowDimensions;
 	private Ball ball;
 	private LifeNumericCounter lifeNumericCounter;
+	private LifeHeartsCounter lifeHeartsCounter;
 
 	private UserInputListener inputListener;
 
@@ -103,8 +104,9 @@ public class BrickerGameManager extends GameManager {
 		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects());
 		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
 
-		// add life counter
+		// add life counters
 		createLifeNumericCounter(windowDimensions);
+		createLifeHeartsCounter(windowDimensions, imageReader);
 	}
 
 	@Override
@@ -118,6 +120,7 @@ public class BrickerGameManager extends GameManager {
 		double ballHeight = ball.getCenter().y();
 		if(ballHeight > windowDimensions.y()) {
 			this.lifeNumericCounter.minusLifeCount();
+			this.lifeHeartsCounter.minusLifeCount();
 			setBallToCenter();
 		}
 	}
@@ -146,8 +149,6 @@ public class BrickerGameManager extends GameManager {
 		Sound collisionSound = soundReader.readSound(COLLISION_SOUND_PATH);
 		this.ball = new Ball(
 				Vector2.ZERO, new Vector2(BALL_RADIUS, BALL_RADIUS), ballImage, collisionSound);
-
-		Vector2 windowDimensions = windowController.getWindowDimensions();
 
 		gameObjects().addGameObject(ball);
 		setBallToCenter();
@@ -252,10 +253,18 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(this.lifeNumericCounter, LIFE_COUNTER_LAYER);
 	}
 
-	private void createLifeHearts(Vector2 windowDimensions, ImageReader imageReader) {
+	private void createLifeHeartsCounter(Vector2 windowDimensions, ImageReader imageReader) {
 		Renderable heartImage = imageReader.readImage(
 				HEART_IMG_PATH, true);
 		int maxLife = this.lifeNumericCounter.getMaxLife();
+		int lifeCount = this.lifeNumericCounter.getLifeCount();
+		this.lifeHeartsCounter = new LifeHeartsCounter(
+				gameObjects(), LIFE_COUNTER_LAYER,
+				new Vector2(BORDER_WIDTH + 2 * COUNTER_DISTANCE + LIFE_COUNTER_SIZE,
+						(int)windowDimensions.y() - LIFE_COUNTER_SIZE - COUNTER_DISTANCE),
+				LIFE_COUNTER_SIZE, heartImage, maxLife, lifeCount
+		);
+//		gameObjects().addGameObject(this.lifeHeartsCounter, LIFE_COUNTER_LAYER);
 
 	}
 
