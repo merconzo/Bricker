@@ -15,7 +15,7 @@ public class Brick extends GameObject {
      */
     static public int totalNumberOfBricks = 0;
 
-    private final CollisionStrategy collisionStrategy;
+    private CollisionStrategy collisionStrategy;
 
 
     /**
@@ -31,6 +31,10 @@ public class Brick extends GameObject {
         super(topLeftCorner, dimensions, renderable);
         this.collisionStrategy = collisionStrategy;
         totalNumberOfBricks++;
+    }
+
+    public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
+        this.collisionStrategy = collisionStrategy;
     }
 
     /**

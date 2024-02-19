@@ -62,6 +62,7 @@ public class BrickerGameManager extends GameManager {
 	private Ball ball;
 	private LifeNumericCounter lifeNumericCounter;
 	private ArrayList<Ball> extraBallsList = new ArrayList<>();
+	private ArrayList<Brick> bricksList = new ArrayList<>();
 
 	private UserInputListener inputListener;
 
@@ -247,6 +248,7 @@ public class BrickerGameManager extends GameManager {
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
 						brickImage, collisionStrategy, BRICK_LAYER);
+				bricksList.add(brick);
 				gameObjects().addGameObject(brick, BRICK_LAYER);
 
 			}
