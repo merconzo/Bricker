@@ -118,12 +118,12 @@ public class BrickerGameManager extends GameManager {
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
+		checkForGameEnd();
 		checkForFallingBall(this.ball);
 		ArrayList<Ball> ballsToRemove = new ArrayList<>(extraBallsList);
 		for (Ball ball : ballsToRemove) {
 			checkForFallingBall(ball);
 		}
-		checkForGameEnd();
 
 
 	}
@@ -148,13 +148,14 @@ public class BrickerGameManager extends GameManager {
 			prompt = "You Lose!";
 		}
 
-		if (Brick.totalNumberOfBricks == 0 || this.inputListener.isKeyPressed(KeyEvent.VK_W)) {
+		if (Brick.totalNumberOfBricks <= 0 || this.inputListener.isKeyPressed(KeyEvent.VK_W)) {
 			prompt = "You Win!";
 		}
 		if(!prompt.isEmpty()) {
 			prompt += " Play again?";
 			if(windowController.openYesNoDialog(prompt))
-				windowController.resetGame();
+			{Brick.totalNumberOfBricks = 0;
+				windowController.resetGame();}
 			else
 				windowController.closeWindow();
 		}
