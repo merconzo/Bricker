@@ -11,8 +11,10 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
+import danogl.util.Counter;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
@@ -59,6 +61,9 @@ public class BrickerGameManager extends GameManager {
 	private Ball ball;
 	private LifeNumericCounter lifeNumericCounter;
 
+	private UserInputListener inputListener;
+
+
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
 		this(windowTitle, windowDimensions, DEFAULT_BRICK_ROW, DEFAULT_BRICK_COLUMN);
@@ -78,12 +83,15 @@ public class BrickerGameManager extends GameManager {
 		super.initializeGame(imageReader, soundReader, inputListener, windowController);
 		this.windowController = windowController;
 		this.windowDimensions = windowController.getWindowDimensions();
+		this.inputListener = inputListener;
 
 		// add ball
 		createBall(imageReader, soundReader, windowController);
 
 		// create paddle
 		createPaddle(imageReader, inputListener, windowDimensions);
+		//create paddle
+		createPaddle(imageReader, this.inputListener, windowDimensions);
 
 		// create borders
 		createBorders(windowDimensions);
@@ -119,7 +127,8 @@ public class BrickerGameManager extends GameManager {
 		if(this.lifeNumericCounter.getLifeCount() == 0) {
 			prompt = "You Lose!";
 		}
-		if (Brick.totalNumberOfBricks == 0) {
+
+		if (Brick.totalNumberOfBricks == 0 || this.inputListener.isKeyPressed(KeyEvent.VK_W)) {
 			prompt = "You Win!";
 		}
 		if(!prompt.isEmpty()) {
@@ -254,7 +263,7 @@ public class BrickerGameManager extends GameManager {
 	public static void main(String[] args) {
 		GameManager gameManager = new BrickerGameManager(
 				WINDOW_TITLE,
-				new Vector2(WINDOW_X_DIMS, WINDOW_Y_DIMS));
+				new Vector2(WINDOW_X_DIMS, WINDOW_Y_DIMS), 2, 3);
 		gameManager.run();
 	}
 }

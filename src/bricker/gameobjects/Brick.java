@@ -5,6 +5,7 @@ import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
+import danogl.util.Counter;
 import danogl.util.Vector2;
 
 public class Brick extends GameObject {
@@ -16,6 +17,7 @@ public class Brick extends GameObject {
 
     private final CollisionStrategy collisionStrategy;
     private final int brickLayer;
+
 
     /**
      * Constructor for creating a Brick object.
