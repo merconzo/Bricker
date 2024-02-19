@@ -2,17 +2,16 @@ package bricker.main;
 
 import bricker.brick_strategies.BasicCollisionStrategy;
 import bricker.brick_strategies.CollisionStrategy;
-import bricker.gameobjects.Brick;
-import bricker.gameobjects.Paddle;
+import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.*;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
+import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
 
-import bricker.gameobjects.Ball;
 import java.awt.*;
 import java.util.Random;
 
@@ -23,14 +22,17 @@ public class BrickerGameManager extends GameManager {
 	private static final float BALL_SPEED = 150;
 	private static final int PADDLE_HEIGHT = 15;
 	private static final int PADDLE_WIDTH = 100;
-	private static final int PADDLE_DISTANCE = 20;
+	private static final int PADDLE_DISTANCE = 30;
 	private static final int BORDER_WIDTH = 4;
 	private static final int BRICK_HEIGHT = 15;
-	private static final Integer DEFAULT_BRICK_ROW = 7;
-	private static final Integer DEFAULT_BRICK_COLLUMN = 8;
+	private static final int DEFAULT_BRICK_ROW = 7;
+	private static final int DEFAULT_BRICK_COLUMN = 8;
+	private static final int LIFE_COUNTER_SIZE = 20;
+	private static final int COUNTER_DISTANCE = 10;
 
 	// Layers
 	private static final int BRICK_LAYER = Layer.STATIC_OBJECTS;
+	private static final int LIFE_COUNTER_LAYER = Layer.UI;
 
 
 	// assets paths
@@ -39,31 +41,33 @@ public class BrickerGameManager extends GameManager {
 	public static final String PADDLE_IMG_PATH = "assets/paddle.png";
 	public static final String BACKGROUND_IMG_PATH = "assets/DARK_BG2_small.jpeg";
 	public static final String BRICK_IMG_PATH = "assets/brick.png";
+	public static final String HEART_IMG_PATH = "assets/heart.png";
 
 	// GUI
 	private static final String WINDOW_TITLE = "BRICKER!";
 	private static final int WINDOW_X_DIMS = 700;
 	private static final int WINDOW_Y_DIMS = 500;
-	private static final Color BORDER_COLOR = Color.CYAN;
+	private static final Color BORDER_COLOR = Color.BLUE;
 
 	// bricks number
-	private Integer brickRows;
-	private Integer brickColumn;
+	private final int brickRows;
+	private final int brickColumns;
 
 	// fields
-	private Ball ball;
 	private WindowController windowController;
 	private Vector2 windowDimensions;
+	private Ball ball;
+	private LifeNumericCounter lifeNumericCounter;
 
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
-		this(windowTitle, windowDimensions, DEFAULT_BRICK_ROW, DEFAULT_BRICK_COLLUMN);
+		this(windowTitle, windowDimensions, DEFAULT_BRICK_ROW, DEFAULT_BRICK_COLUMN);
 	}
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions, Integer brickRows, Integer brickColumn) {
 		super(windowTitle, windowDimensions);
 		this.brickRows = brickRows;
-		this.brickColumn = brickColumn;
+		this.brickColumns = brickColumn;
 	}
 
 
@@ -78,32 +82,41 @@ public class BrickerGameManager extends GameManager {
 		// add ball
 		createBall(imageReader, soundReader, windowController);
 
-		//create paddle
+		// create paddle
 		createPaddle(imageReader, inputListener, windowDimensions);
 
-		//create borders
+		// create borders
 		createBorders(windowDimensions);
 
-		//create background
+		// create background
 		createBackground(windowDimensions, imageReader);
 
-		//addBricks
+		// add Bricks
 		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects());
 		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
 
+		// add life counter
+		createLifeNumericCounter(windowDimensions);
 	}
 
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
+		checkForFallingBall();
 		checkForGameEnd();
 	}
 
-	private void checkForGameEnd() {
+	private void checkForFallingBall() {
 		double ballHeight = ball.getCenter().y();
-
-		String prompt = "";  // TODO: change to update life counter
 		if(ballHeight > windowDimensions.y()) {
+			this.lifeNumericCounter.minusLifeCount();
+			setBallToCenter();
+		}
+	}
+
+	private void checkForGameEnd() {
+		String prompt = "";  // TODO: change to update life counter
+		if(this.lifeNumericCounter.getLifeCount() == 0) {
 			prompt = "You Lose!";
 		}
 		if (Brick.totalNumberOfBricks == 0) {
@@ -126,9 +139,15 @@ public class BrickerGameManager extends GameManager {
 				Vector2.ZERO, new Vector2(BALL_RADIUS, BALL_RADIUS), ballImage, collisionSound);
 
 		Vector2 windowDimensions = windowController.getWindowDimensions();
-		ball.setCenter(windowDimensions.mult(0.5f));
-		gameObjects().addGameObject(ball);
 
+		gameObjects().addGameObject(ball);
+		setBallToCenter();
+	}
+
+	private void setBallToCenter() {
+		// center location
+		ball.setCenter(windowDimensions.mult(0.5f));
+		// random direction
 		float ballVelX = BALL_SPEED;
 		float ballVelY = BALL_SPEED;
 		Random rand = new Random();
@@ -195,11 +214,11 @@ public class BrickerGameManager extends GameManager {
 				BRICK_IMG_PATH, false);
 
 
-		float brickWidth = ((windowDimensions.x()- (2 * BORDER_WIDTH) - this.brickColumn - 2) / this.brickColumn);
+		float brickWidth = ((windowDimensions.x() - (2 * BORDER_WIDTH) - this.brickColumns - 2) / this.brickColumns);
 		Vector2 brickDimensions = new Vector2(brickWidth, BRICK_HEIGHT);
 		for (int i = 0; i < this.brickRows; i++) {
 			float brickLeftY = BRICK_HEIGHT * i + BORDER_WIDTH + (3 * i);
-			for (int j = 0; j < this.brickColumn; j++) {
+			for (int j = 0; j < this.brickColumns; j++) {
 				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY);
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
@@ -209,6 +228,25 @@ public class BrickerGameManager extends GameManager {
 			}
 
 		}
+
+	}
+
+	private void createLifeNumericCounter(Vector2 windowDimensions) {
+
+		TextRenderable counterRenderable = new TextRenderable("0");
+		this.lifeNumericCounter = new LifeNumericCounter(
+				new Vector2(BORDER_WIDTH + COUNTER_DISTANCE,
+						(int)windowDimensions.y() - LIFE_COUNTER_SIZE - COUNTER_DISTANCE),
+				new Vector2(LIFE_COUNTER_SIZE, LIFE_COUNTER_SIZE),
+				counterRenderable
+		);
+		gameObjects().addGameObject(this.lifeNumericCounter, LIFE_COUNTER_LAYER);
+	}
+
+	private void createLifeHearts(Vector2 windowDimensions, ImageReader imageReader) {
+		Renderable heartImage = imageReader.readImage(
+				HEART_IMG_PATH, true);
+		int maxLife = this.lifeNumericCounter.getMaxLife();
 
 	}
 

@@ -9,6 +9,9 @@ import danogl.util.Vector2;
 
 public class Brick extends GameObject {
 
+    /**
+     * totalNumberOfBricks
+     */
     static public int totalNumberOfBricks = 0;
 
     private final CollisionStrategy collisionStrategy;

@@ -1,7 +1,7 @@
 package bricker.gameobjects;
 
 import danogl.GameObject;
-import danogl.gui.rendering.Renderable;
+import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
 
 import java.awt.*;
@@ -11,48 +11,57 @@ public class LifeNumericCounter extends GameObject {
 	private static final int INIT_LIFE = 3;
 	private static final Color DEFAULT_COLOR = Color.GREEN;
 
+	private final TextRenderable renderable;
 	private final int maxLife;
-	private int lifeNumericCounter;
-	private Color color;
+	private int lifeCount;
 
-	public LifeNumericCounter(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable) {
+	public LifeNumericCounter(Vector2 topLeftCorner, Vector2 dimensions, TextRenderable renderable) {
 		super(topLeftCorner, dimensions, renderable);
-		this.lifeNumericCounter = INIT_LIFE;
+		this.renderable = renderable;
+		this.lifeCount = INIT_LIFE;
 		this.maxLife = MAX_LIFE;
+		render();
 	}
 
-	public int getLifeNumericCounter() {
-		return lifeNumericCounter;
+	public int getLifeCount() {
+		return lifeCount;
 	}
 
 	public int getMaxLife() {
 		return maxLife;
 	}
 
-	public Color getColor() {
-		return color;
+	public void minusLifeCount() {
+		if (this.lifeCount == 0)
+			return;
+		this.lifeCount--;
+		render();
 	}
 
-	public void minusLifeNumericCounter(int lifeNumericCounter) {
-		if (this.lifeNumericCounter == 0)
+	public void plusLifeCount() {
+		if (this.lifeCount == this.maxLife)
 			return;
-		this.lifeNumericCounter--;
-		updateColor();
+		this.lifeCount++;
+		render();
 	}
 
-	public void plusLifeNumericCounter(int lifeNumericCounter) {
-		if (this.lifeNumericCounter == this.maxLife)
-			return;
-		this.lifeNumericCounter++;
+	private void render() {
 		updateColor();
+		updateRenderNumber();
 	}
 
 	private void updateColor() {
-		if (this.lifeNumericCounter <= 1)
-			this.color = Color.RED;
-		else if (this.lifeNumericCounter == 2)
-			this.color = Color.ORANGE;
+		Color color;
+		if (this.lifeCount <= 1)
+			color = Color.RED;
+		else if (this.lifeCount == 2)
+			color = Color.ORANGE;
 		else
-			this.color = DEFAULT_COLOR;
+			color = DEFAULT_COLOR;
+		this.renderable.setColor(color);
+	}
+
+	private void updateRenderNumber() {
+		this.renderable.setString(Integer.toString(this.lifeCount));
 	}
 }
