@@ -2,7 +2,7 @@ package bricker.main;
 
 import bricker.brick_strategies.BasicCollisionStrategy;
 import bricker.brick_strategies.CollisionStrategy;
-import bricker.brick_strategies.PuckCollisionStrategy;
+import bricker.brick_strategies.StrategiesFactory;
 import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -16,6 +16,7 @@ import danogl.util.Vector2;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
@@ -61,7 +62,7 @@ public class BrickerGameManager extends GameManager {
 	private Vector2 windowDimensions;
 	private Ball ball;
 	private LifeNumericCounter lifeNumericCounter;
-	private ArrayList<Ball> extraBallsList = new ArrayList<>();
+	private static ArrayList<Ball> extraBallsList = new ArrayList<>();
 	private ArrayList<Brick> bricksList = new ArrayList<>();
 
 	private UserInputListener inputListener;
@@ -87,6 +88,7 @@ public class BrickerGameManager extends GameManager {
 		this.windowController = windowController;
 		this.windowDimensions = windowController.getWindowDimensions();
 		this.inputListener = inputListener;
+		Sound collisionSound = soundReader.readSound(COLLISION_SOUND_PATH);
 
 		// add mainBall
 	   createMainBall(imageReader, soundReader);
@@ -104,7 +106,10 @@ public class BrickerGameManager extends GameManager {
 
 		// add Bricks
 		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects(), BRICK_LAYER);
-		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
+		StrategiesFactory strategiesFactory = new StrategiesFactory(
+				BALL_RADIUS, windowDimensions, gameObjects(), BRICK_LAYER,
+				extraBallsList,collisionSound,imageReader);
+		createBricks(windowDimensions, imageReader, strategiesFactory);
 
 		// add life counter
 		createLifeNumericCounter(windowDimensions);
@@ -114,8 +119,9 @@ public class BrickerGameManager extends GameManager {
 	public void update(float deltaTime) {
 		super.update(deltaTime);
 		checkForFallingBall(this.ball);
-		for (Ball ball : extraBallsList) {
-                checkForFallingBall(ball);
+		ArrayList<Ball> ballsToRemove = new ArrayList<>(extraBallsList);
+		for (Ball ball : ballsToRemove) {
+			checkForFallingBall(ball);
 		}
 		checkForGameEnd();
 
@@ -158,18 +164,20 @@ public class BrickerGameManager extends GameManager {
 	private void createMainBall(ImageReader imageReader, SoundReader soundReader){
 		Renderable ballImage = imageReader.readImage(BALL_IMG_PATH, true);
 		Sound collisionSound = soundReader.readSound(COLLISION_SOUND_PATH);
-		this.ball = createBall(ballImage, collisionSound, windowDimensions, BALL_RADIUS, windowDimensions.mult(0.5f));
+		this.ball = createBall(ballImage, collisionSound, BALL_RADIUS, windowDimensions.mult(0.5f));
 		gameObjects().addGameObject(ball);
 	}
-	private Ball createBall(Renderable ballImage, Sound collisionSound, Vector2 windowDimensions, int ballRadius,
-							Vector2 center) {
+	public static Ball createBall(Renderable ballImage, Sound collisionSound, int ballRadius,
+						   Vector2 center) {
 		Ball ball = new Ball(
 				Vector2.ZERO, new Vector2(ballRadius, ballRadius), ballImage, collisionSound);
 		setBallToCenter(center, ball);
 		return ball;
 	}
-
-	private void setBallToCenter(Vector2 center, Ball ball) {
+	public static void addToExtraBallsList(Ball ball){
+		extraBallsList.add(ball);
+	}
+	private static void setBallToCenter(Vector2 center, Ball ball) {
 		// center location
 		ball.setCenter(center);
 		// random direction
@@ -225,16 +233,22 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(background, Layer.BACKGROUND);
 	}
 
+	private int getRandomInt(int min, int max){
+		Random random = new Random();
+        return random.nextInt(max - min + 1) + min;
+	}
+
+
 	/**
 	 * Method to create bricks and add them to the game.
 	 *
 	 * @param windowDimensions  The dimensions of the game window.
 	 * @param imageReader       The image reader for loading brick images.
-	 * @param collisionStrategy The collision strategy for the bricks.
+	 * @param strategiesFactory The collision strategy for the bricks.
 	 *
 	 */
 	private void createBricks(Vector2 windowDimensions, ImageReader imageReader,
-							 CollisionStrategy collisionStrategy) {
+							 StrategiesFactory strategiesFactory) {
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
 
@@ -245,10 +259,12 @@ public class BrickerGameManager extends GameManager {
 			float brickLeftY = BRICK_HEIGHT * i + BORDER_WIDTH + (3 * i);
 			for (int j = 0; j < this.brickColumns; j++) {
 				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY);
+				int strategyNum = getRandomInt(4,6);
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
-						brickImage, collisionStrategy, BRICK_LAYER);
-				bricksList.add(brick);
+						brickImage, null, BRICK_LAYER);
+				CollisionStrategy brickStrategy = strategiesFactory.returnRightStrategy(strategyNum, brick);
+				brick.setCollisionStrategy(brickStrategy);
 				gameObjects().addGameObject(brick, BRICK_LAYER);
 
 			}

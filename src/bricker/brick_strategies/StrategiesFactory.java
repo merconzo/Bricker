@@ -1,0 +1,67 @@
+package bricker.brick_strategies;
+
+import bricker.gameobjects.Ball;
+import bricker.gameobjects.Brick;
+import danogl.collisions.GameObjectCollection;
+import danogl.gui.ImageReader;
+import danogl.gui.Sound;
+import danogl.gui.rendering.Renderable;
+import danogl.util.Vector2;
+
+import java.util.ArrayList;
+
+public class StrategiesFactory {
+
+    //assets
+    private static final String PUCK_IMG_PATH = "assets/mockBall.png";
+
+    //sizes
+    private int mainBallRadius;
+    private int puckBallRadius;
+    private Vector2 windowDimensions;
+    private Vector2 brickCenter;
+
+    //GameObjects
+    private GameObjectCollection gameObjects;
+    private int object1Layer;
+    private ArrayList<Ball> extraBallsList;
+    private Sound collisionSound;
+    private ImageReader imageReader;
+
+    public StrategiesFactory(int mainBallRadius, Vector2 windowDimensions,
+                             GameObjectCollection gameObjects, int object1Layer,
+                             ArrayList<Ball> extraBallsList, Sound collisionSound,
+                             ImageReader imageReader) {
+        this.mainBallRadius = mainBallRadius;
+        this.windowDimensions = windowDimensions;
+        this.gameObjects = gameObjects;
+        this.object1Layer = object1Layer;
+        this.extraBallsList = extraBallsList;
+        this.collisionSound = collisionSound;
+        this.imageReader = imageReader;
+        this.puckBallRadius = (int) (0.75 * mainBallRadius);
+    }
+
+    public CollisionStrategy returnRightStrategy (int randomNum, Brick brick) {
+        Vector2 brickCenter = brick.getCenter();
+        if (randomNum == 6) {
+            return (createPuckStrategy(imageReader, collisionSound, puckBallRadius, brickCenter));
+        }
+        else {
+            return new BasicCollisionStrategy(gameObjects, object1Layer);
+        }
+    }
+
+    private PuckCollisionStrategy createPuckStrategy(ImageReader imageReader, Sound collisionSound,
+                                                     int puckBallRadius, Vector2 brickCenter) {
+       Renderable puckImg = imageReader.readImage(PUCK_IMG_PATH, true);
+       Ball puck1 = bricker.main.BrickerGameManager.createBall(puckImg, collisionSound, puckBallRadius, brickCenter);
+       Ball puck2 = bricker.main.BrickerGameManager.createBall(puckImg, collisionSound, puckBallRadius, brickCenter);
+       bricker.main.BrickerGameManager.addToExtraBallsList(puck1);
+       bricker.main.BrickerGameManager.addToExtraBallsList(puck2);
+       return new PuckCollisionStrategy(gameObjects, object1Layer, puck1, puck2);
+    }
+
+
+
+}
