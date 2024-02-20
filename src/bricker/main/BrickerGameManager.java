@@ -121,13 +121,14 @@ public class BrickerGameManager extends GameManager {
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
+		isExtraPaddleHitedFourTimes();
 		checkForGameEnd();
 		checkForFallingBall(this.ball);
 		ArrayList<Ball> ballsToRemove = new ArrayList<>(extraBallsList);
 		for (Ball ball : ballsToRemove) {
 			checkForFallingBall(ball);
 		}
-		isExtraPaddleHitedFourTimes();
+
 
 
 	}
@@ -150,10 +151,12 @@ public class BrickerGameManager extends GameManager {
 		String prompt = "";  // TODO: change to update life counter
 		if(this.lifeNumericCounter.getLifeCount() == 0) {
 			prompt = "You Lose!";
+			setExtraPaddle(null);
 		}
 
 		if (Brick.totalNumberOfBricks <= 0 || this.inputListener.isKeyPressed(KeyEvent.VK_W)) {
 			prompt = "You Win!";
+			setExtraPaddle(null);
 		}
 		if(!prompt.isEmpty()) {
 			prompt += " Play again?";
