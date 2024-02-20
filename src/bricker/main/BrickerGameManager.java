@@ -65,6 +65,10 @@ public class BrickerGameManager extends GameManager {
 	private static ArrayList<Ball> extraBallsList = new ArrayList<>();
 	private ArrayList<Brick> bricksList = new ArrayList<>();
 
+
+
+	private static Paddle extraPaddle = null;
+
 	private UserInputListener inputListener;
 
 
@@ -94,9 +98,8 @@ public class BrickerGameManager extends GameManager {
 	   createMainBall(imageReader, soundReader);
 
 	   // create paddle
-		createPaddle(imageReader, inputListener, windowDimensions);
-		//create paddle
-		createPaddle(imageReader, this.inputListener, windowDimensions);
+		Paddle mainPaddle = createPaddle(imageReader, inputListener, windowDimensions);
+		gameObjects().addGameObject(mainPaddle);
 
 		// create borders
 		createBorders(windowDimensions);
@@ -108,7 +111,7 @@ public class BrickerGameManager extends GameManager {
 		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects(), BRICK_LAYER);
 		StrategiesFactory strategiesFactory = new StrategiesFactory(
 				BALL_RADIUS, windowDimensions, gameObjects(), BRICK_LAYER,
-				extraBallsList,collisionSound,imageReader);
+				extraBallsList,collisionSound,imageReader, inputListener);
 		createBricks(windowDimensions, imageReader, strategiesFactory);
 
 		// add life counter
@@ -124,6 +127,7 @@ public class BrickerGameManager extends GameManager {
 		for (Ball ball : ballsToRemove) {
 			checkForFallingBall(ball);
 		}
+		isExtraPaddleHitedFourTimes();
 
 
 	}
@@ -191,10 +195,10 @@ public class BrickerGameManager extends GameManager {
 			ballVelY *= -1;
 		ball.setVelocity(new Vector2(ballVelX, ballVelY));
 	}
-	public void createPaddle(ImageReader imageReader, UserInputListener inputListener, Vector2 windowDimensions) {
+	public static Paddle createPaddle(ImageReader imageReader, UserInputListener inputListener, Vector2 windowDimensions) {
 		Renderable paddleImage = imageReader.readImage(
 				PADDLE_IMG_PATH, true);
-		GameObject paddle = new Paddle(
+		Paddle paddle = new Paddle(
 				Vector2.ZERO,
 				new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT),
 				paddleImage,
@@ -202,9 +206,25 @@ public class BrickerGameManager extends GameManager {
 
 		paddle.setCenter(
 				new Vector2(windowDimensions.x()/2, (int)windowDimensions.y()-PADDLE_DISTANCE));
-		gameObjects().addGameObject(paddle);
+		return paddle;
 	}
 
+	public static void setExtraPaddle(Paddle extraPaddle) {
+		BrickerGameManager.extraPaddle = extraPaddle;
+	}
+
+	public static Paddle getExtraPaddle() {
+		return extraPaddle;
+	}
+
+	private void isExtraPaddleHitedFourTimes(){
+		if (extraPaddle != null) {
+			if (extraPaddle.getCollisionCounter() == 4) {
+				gameObjects().removeGameObject(extraPaddle);
+				setExtraPaddle(null);
+			}
+		}
+	}
 	private void createBorders(Vector2 windowDimensions) {
 		GameObject border_right = new GameObject(
 				new Vector2((int)windowDimensions.x() - BORDER_WIDTH, 0),
@@ -257,7 +277,7 @@ public class BrickerGameManager extends GameManager {
 			float brickLeftY = BRICK_HEIGHT * i + BORDER_WIDTH + (3 * i);
 			for (int j = 0; j < this.brickColumns; j++) {
 				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY);
-				int strategyNum = getRandomInt(4,6);
+				int strategyNum = getRandomInt(7,7);
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
 						brickImage, null, BRICK_LAYER);
