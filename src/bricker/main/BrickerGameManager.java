@@ -2,6 +2,7 @@ package bricker.main;
 
 import bricker.brick_strategies.BasicCollisionStrategy;
 import bricker.brick_strategies.CollisionStrategy;
+import bricker.brick_strategies.StrategiesFactory;
 import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -11,10 +12,11 @@ import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
-import danogl.util.Counter;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Random;
 
 public class BrickerGameManager extends GameManager {
@@ -61,6 +63,8 @@ public class BrickerGameManager extends GameManager {
 	private Ball ball;
 	private LifeNumericCounter lifeNumericCounter;
 	private LifeHeartsCounter lifeHeartsCounter;
+	private static ArrayList<Ball> extraBallsList = new ArrayList<>();
+	private ArrayList<Brick> bricksList = new ArrayList<>();
 
 	private UserInputListener inputListener;
 
@@ -85,11 +89,12 @@ public class BrickerGameManager extends GameManager {
 		this.windowController = windowController;
 		this.windowDimensions = windowController.getWindowDimensions();
 		this.inputListener = inputListener;
+		Sound collisionSound = soundReader.readSound(COLLISION_SOUND_PATH);
 
-		// add ball
-		createBall(imageReader, soundReader, windowController);
+		// add mainBall
+	   createMainBall(imageReader, soundReader);
 
-		// create paddle
+	   // create paddle
 		createPaddle(imageReader, inputListener, windowDimensions);
 		//create paddle
 		createPaddle(imageReader, this.inputListener, windowDimensions);
@@ -101,8 +106,11 @@ public class BrickerGameManager extends GameManager {
 		createBackground(windowDimensions, imageReader);
 
 		// add Bricks
-		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects());
-		createBricks(windowDimensions, imageReader, basicCollisionStrategy);
+		CollisionStrategy basicCollisionStrategy = new BasicCollisionStrategy(gameObjects(), BRICK_LAYER);
+		StrategiesFactory strategiesFactory = new StrategiesFactory(
+				BALL_RADIUS, windowDimensions, gameObjects(), BRICK_LAYER,
+				extraBallsList,collisionSound,imageReader);
+		createBricks(windowDimensions, imageReader, strategiesFactory);
 
 		// add life counters
 		createLifeNumericCounter(windowDimensions);
@@ -112,17 +120,30 @@ public class BrickerGameManager extends GameManager {
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
-		checkForFallingBall();
 		checkForGameEnd();
+		checkForFallingBall(this.ball);
+		ArrayList<Ball> ballsToRemove = new ArrayList<>(extraBallsList);
+		for (Ball ball : ballsToRemove) {
+			checkForFallingBall(ball);
+		}
+
+
 	}
 
-	private void checkForFallingBall() {
+	private void checkForFallingBall(Ball ball) {
 		double ballHeight = ball.getCenter().y();
 		if(ballHeight > windowDimensions.y()) {
+			if (extraBallsList.contains(ball)) {
+				gameObjects().removeGameObject(ball);
+				extraBallsList.remove(ball);
+			}
+			else {
 			this.lifeNumericCounter.minusLifeCount();
 			this.lifeHeartsCounter.minusLifeCount();
 			setBallToCenter();
+			setBallToCenter(windowDimensions.mult(0.5f), ball);}
 		}
+
 	}
 
 	private void checkForGameEnd() {
@@ -131,32 +152,42 @@ public class BrickerGameManager extends GameManager {
 			prompt = "You Lose!";
 		}
 
-		if (Brick.totalNumberOfBricks == 0 || this.inputListener.isKeyPressed(KeyEvent.VK_W)) {
+		if (Brick.totalNumberOfBricks <= 0 || this.inputListener.isKeyPressed(KeyEvent.VK_W)) {
 			prompt = "You Win!";
 		}
 		if(!prompt.isEmpty()) {
 			prompt += " Play again?";
 			if(windowController.openYesNoDialog(prompt))
-				windowController.resetGame();
+			{Brick.totalNumberOfBricks = 0;
+				windowController.resetGame();}
 			else
 				windowController.closeWindow();
 		}
 	}
 
-	private void createBall(ImageReader imageReader, SoundReader soundReader, WindowController windowController) {
-		Renderable ballImage =
-				imageReader.readImage(BALL_IMG_PATH, true);
+
+	private void createMainBall(ImageReader imageReader, SoundReader soundReader){
+		Renderable ballImage = imageReader.readImage(BALL_IMG_PATH, true);
 		Sound collisionSound = soundReader.readSound(COLLISION_SOUND_PATH);
+		this.ball = createBall(ballImage, collisionSound, BALL_RADIUS, windowDimensions.mult(0.5f));
 		this.ball = new Ball(
 				Vector2.ZERO, new Vector2(BALL_RADIUS, BALL_RADIUS), ballImage, collisionSound);
 
 		gameObjects().addGameObject(ball);
-		setBallToCenter();
 	}
-
-	private void setBallToCenter() {
+	public static Ball createBall(Renderable ballImage, Sound collisionSound, int ballRadius,
+						   Vector2 center) {
+		Ball ball = new Ball(
+				Vector2.ZERO, new Vector2(ballRadius, ballRadius), ballImage, collisionSound);
+		setBallToCenter(center, ball);
+		return ball;
+	}
+	public static void addToExtraBallsList(Ball ball){
+		extraBallsList.add(ball);
+	}
+	private static void setBallToCenter(Vector2 center, Ball ball) {
 		// center location
-		ball.setCenter(windowDimensions.mult(0.5f));
+		ball.setCenter(center);
 		// random direction
 		float ballVelX = BALL_SPEED;
 		float ballVelY = BALL_SPEED;
@@ -167,8 +198,7 @@ public class BrickerGameManager extends GameManager {
 			ballVelY *= -1;
 		ball.setVelocity(new Vector2(ballVelX, ballVelY));
 	}
-
-	private void createPaddle(ImageReader imageReader, UserInputListener inputListener, Vector2 windowDimensions) {
+	public void createPaddle(ImageReader imageReader, UserInputListener inputListener, Vector2 windowDimensions) {
 		Renderable paddleImage = imageReader.readImage(
 				PADDLE_IMG_PATH, true);
 		GameObject paddle = new Paddle(
@@ -210,29 +240,36 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(background, Layer.BACKGROUND);
 	}
 
+	private int getRandomInt(int min, int max){
+		Random random = new Random();
+        return random.nextInt(max - min + 1) + min;
+	}
+
+
 	/**
 	 * Method to create bricks and add them to the game.
 	 *
 	 * @param windowDimensions  The dimensions of the game window.
 	 * @param imageReader       The image reader for loading brick images.
-	 * @param collisionStrategy The collision strategy for the bricks.
+	 * @param strategiesFactory The collision strategy for the bricks.
 	 *
 	 */
 	private void createBricks(Vector2 windowDimensions, ImageReader imageReader,
-							 CollisionStrategy collisionStrategy) {
+							 StrategiesFactory strategiesFactory) {
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
-
-
 		float brickWidth = ((windowDimensions.x() - (2 * BORDER_WIDTH) - this.brickColumns - 2) / this.brickColumns);
 		Vector2 brickDimensions = new Vector2(brickWidth, BRICK_HEIGHT);
 		for (int i = 0; i < this.brickRows; i++) {
 			float brickLeftY = BRICK_HEIGHT * i + BORDER_WIDTH + (3 * i);
 			for (int j = 0; j < this.brickColumns; j++) {
 				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY);
+				int strategyNum = getRandomInt(4,6);
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
-						brickImage, collisionStrategy, BRICK_LAYER);
+						brickImage, null, BRICK_LAYER);
+				CollisionStrategy brickStrategy = strategiesFactory.returnRightStrategy(strategyNum, brick);
+				brick.setCollisionStrategy(brickStrategy);
 				gameObjects().addGameObject(brick, BRICK_LAYER);
 
 			}
