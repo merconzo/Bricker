@@ -57,5 +57,12 @@ public class LifeHeartsCounter {
 		this.hearts[curLifeCount].setVisibility(false);
 	}
 
+	public void plusLifeCount() {
+		if (this.curLifeCount == this.maxLife)
+			return;
+		this.hearts[curLifeCount].setVisibility(true);
+		this.curLifeCount++;
+	}
+
 
 }

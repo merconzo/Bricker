@@ -13,7 +13,7 @@ public class Heart extends GameObject {
 
 	public void setVisibility(boolean isVisible) {
 		if (isVisible) {
-			if (isVisible())
+			if (isVisible())  // TODO: maybe to delete
 				return;
 			super.renderer().setRenderable(image);
 		}
@@ -24,7 +24,7 @@ public class Heart extends GameObject {
 		}
 	}
 
-	public boolean isVisible() {
+	private boolean isVisible() {
 		return super.renderer().getRenderable() != null;
 	}
 }
