@@ -191,8 +191,7 @@ public class BrickerGameManager extends GameManager {
 			ballVelY *= -1;
 		ball.setVelocity(new Vector2(ballVelX, ballVelY));
 	}
-
-	private void createPaddle(ImageReader imageReader, UserInputListener inputListener, Vector2 windowDimensions) {
+	public void createPaddle(ImageReader imageReader, UserInputListener inputListener, Vector2 windowDimensions) {
 		Renderable paddleImage = imageReader.readImage(
 				PADDLE_IMG_PATH, true);
 		GameObject paddle = new Paddle(
@@ -252,8 +251,6 @@ public class BrickerGameManager extends GameManager {
 							 StrategiesFactory strategiesFactory) {
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
-
-
 		float brickWidth = ((windowDimensions.x() - (2 * BORDER_WIDTH) - this.brickColumns - 2) / this.brickColumns);
 		Vector2 brickDimensions = new Vector2(brickWidth, BRICK_HEIGHT);
 		for (int i = 0; i < this.brickRows; i++) {

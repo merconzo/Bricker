@@ -15,28 +15,24 @@ public class StrategiesFactory {
     //assets
     private static final String PUCK_IMG_PATH = "assets/mockBall.png";
 
-    //sizes
-    private int mainBallRadius;
-    private int puckBallRadius;
+    private final int puckBallRadius;
     private Vector2 windowDimensions;
     private Vector2 brickCenter;
 
     //GameObjects
-    private GameObjectCollection gameObjects;
-    private int object1Layer;
+    private final GameObjectCollection gameObjects;
+    private final int object1Layer;
     private ArrayList<Ball> extraBallsList;
-    private Sound collisionSound;
-    private ImageReader imageReader;
+    private final Sound collisionSound;
+    private final ImageReader imageReader;
 
     public StrategiesFactory(int mainBallRadius, Vector2 windowDimensions,
                              GameObjectCollection gameObjects, int object1Layer,
                              ArrayList<Ball> extraBallsList, Sound collisionSound,
                              ImageReader imageReader) {
-        this.mainBallRadius = mainBallRadius;
         this.windowDimensions = windowDimensions;
         this.gameObjects = gameObjects;
         this.object1Layer = object1Layer;
-        this.extraBallsList = extraBallsList;
         this.collisionSound = collisionSound;
         this.imageReader = imageReader;
         this.puckBallRadius = (int) (0.75 * mainBallRadius);
