@@ -23,7 +23,7 @@ public class BrickerGameManager extends GameManager {
 
 	// sizes
 	private static final int BALL_RADIUS = 20;
-	private static final float BALL_SPEED = 150;
+	private static final float BALL_SPEED = 200;
 	private static final int PADDLE_HEIGHT = 15;
 	private static final int PADDLE_WIDTH = 100;
 	private static final int BORDER_WIDTH = 4;
@@ -210,12 +210,13 @@ public class BrickerGameManager extends GameManager {
 				Vector2.ZERO,
 				new Vector2(PADDLE_WIDTH, PADDLE_HEIGHT),
 				paddleImage,
-				inputListener, windowDimensions);
+				inputListener, windowDimensions, BORDER_WIDTH);
 
 		paddle.setCenter(
 				new Vector2(windowDimensions.x()/2, (int)windowDimensions.y()-PADDLE_DISTANCE));
 		return paddle;
 	}
+
 
 	public static void setExtraPaddle(Paddle extraPaddle) {
 		BrickerGameManager.extraPaddle = extraPaddle;
@@ -285,7 +286,7 @@ public class BrickerGameManager extends GameManager {
 			float brickLeftY = BRICK_HEIGHT * i + BORDER_WIDTH + (3 * i);
 			for (int j = 0; j < this.brickColumns; j++) {
 				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY);
-				int strategyNum = getRandomInt(7,7);
+				int strategyNum = getRandomInt(5,7);
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
 						brickImage, null, BRICK_LAYER);

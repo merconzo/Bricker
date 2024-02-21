@@ -13,8 +13,7 @@ public class Paddle extends GameObject {
     private final UserInputListener inputListener;
     private final Vector2 windowDimensions;
 
-
-
+    private final int bordersSize;
 
     private int collisionCounter = 0;
 
@@ -28,10 +27,11 @@ public class Paddle extends GameObject {
      * @param windowDimensions the dimensions of the game window
      */
     public Paddle(Vector2 topLeftCorner, Vector2 dimensions,
-				  Renderable renderable, UserInputListener inputListener, Vector2 windowDimensions) {
+				  Renderable renderable, UserInputListener inputListener, Vector2 windowDimensions, int bordersSize) {
         super(topLeftCorner, dimensions, renderable);
         this.inputListener = inputListener;
         this.windowDimensions = windowDimensions;
+        this.bordersSize = bordersSize;
     }
 
     @Override
@@ -46,18 +46,19 @@ public class Paddle extends GameObject {
         }
         setVelocity(movementDir.mult(MOVEMENT_SPEED));
 
-        if (getTopLeftCorner().x() < 0) {
-            setTopLeftCorner(new Vector2(this.windowDimensions.x(), getTopLeftCorner().y()));
-        } else if (getTopLeftCorner().x() > this.windowDimensions.x()) {
-            setTopLeftCorner(new Vector2(0, getTopLeftCorner().y()));
+        if (getTopLeftCorner().x() < bordersSize) {
+            setTopLeftCorner(new Vector2(bordersSize, getTopLeftCorner().y()));
+        } else if (getTopLeftCorner().x() > this.windowDimensions.x()-bordersSize-this.getDimensions().x()) {
+            setTopLeftCorner(new Vector2(this.windowDimensions.x()-bordersSize-this.getDimensions().x(),
+                    getTopLeftCorner().y()));
         }
     }
 
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
-        if (other instanceof Ball) {collisionCounter++;System.out.println(collisionCounter);
-        }
+        if (other instanceof Ball) {collisionCounter++;};
+
     }
 
     public int getCollisionCounter() {
