@@ -10,7 +10,6 @@ import danogl.util.Vector2;
 import java.util.ArrayList;
 import java.util.Random;
 
-
 public class StrategiesFactory {
 
     //assets
@@ -86,7 +85,7 @@ public class StrategiesFactory {
 
     private PaddleCollisionStrategy createPaddleStrategy(){
         return new PaddleCollisionStrategy(gameObjects,
-                object1Layer, imageReader, inputListener, windowDimensions);
+                object1Layer, windowDimensions);
     }
 
     private DoubleCollisionStrategy createDoubleStrategy(){

@@ -23,7 +23,7 @@ public class BasicCollisionStrategy implements CollisionStrategy {
     /**
      * Handles collisions between game objects by removing the first object from the game.
      *
-     * @param object1 The first game object involved in the collision.
+     * @param object1 The first game object involved in the collision. (usually brick)
      * @param object2 The second game object involved in the collision.
      */
     @Override

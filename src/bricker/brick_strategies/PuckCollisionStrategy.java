@@ -10,7 +10,7 @@ import danogl.collisions.GameObjectCollection;
 
 public class PuckCollisionStrategy extends BasicCollisionStrategy {
 
-    private final Ball puck1, puck2;
+    private final Ball puck1, puck2; // TODO: array of pucks
 
     /**
      * Constructs a PuckCollisionStrategy with the given parameters.
