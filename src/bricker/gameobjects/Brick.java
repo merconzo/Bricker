@@ -49,4 +49,5 @@ public class Brick extends GameObject {
         super.onCollisionEnter(other, collision);
         this.collisionStrategy.onCollision(this, other);
     }
+
 }

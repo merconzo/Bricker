@@ -18,9 +18,6 @@ public class LifeHeartsCounter {
 							 int heartSize,
 							 Renderable heartImage,
 							 int maxLifeCount, int initLifeCount) {
-//		super(topLeftCorner,
-//				new Vector2((heartSize + SPACE_BETWEEN_HEARTS) * maxLifeCount, heartSize),
-//				null);
 		this.maxLife = maxLifeCount;
 		this.curLifeCount = initLifeCount;
 		// create hearts

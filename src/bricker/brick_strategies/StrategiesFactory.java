@@ -17,7 +17,7 @@ public class StrategiesFactory {
     private static final String PUCK_IMG_PATH = "assets/mockBall.png";
 
     private final int puckBallRadius;
-    private Vector2 windowDimensions;
+    private final Vector2 windowDimensions;
     private Vector2 brickCenter;
 
     //GameObjects
@@ -26,7 +26,7 @@ public class StrategiesFactory {
     private ArrayList<Ball> extraBallsList;
     private final Sound collisionSound;
     private final ImageReader imageReader;
-    private UserInputListener inputListener;
+    private final UserInputListener inputListener;
 
     public StrategiesFactory(int mainBallRadius, Vector2 windowDimensions,
                              GameObjectCollection gameObjects, int object1Layer,
@@ -55,9 +55,10 @@ public class StrategiesFactory {
     }
 
     private PuckCollisionStrategy createPuckStrategy (Vector2 brickCenter) {
+        // TODO: more than 2 pucks?
        Renderable puckImg = imageReader.readImage(PUCK_IMG_PATH, true);
-       Ball puck1 = bricker.main.BrickerGameManager.createBall(puckImg, collisionSound, puckBallRadius, brickCenter);
-       Ball puck2 = bricker.main.BrickerGameManager.createBall(puckImg, collisionSound, puckBallRadius, brickCenter);
+       Ball puck1 = bricker.main.BrickerGameManager.createBall(puckImg, puckBallRadius, brickCenter);
+       Ball puck2 = bricker.main.BrickerGameManager.createBall(puckImg, puckBallRadius, brickCenter);
        bricker.main.BrickerGameManager.addToExtraBallsList(puck1);
        bricker.main.BrickerGameManager.addToExtraBallsList(puck2);
        return new PuckCollisionStrategy(gameObjects, object1Layer, puck1, puck2);

@@ -2,7 +2,6 @@ package bricker.brick_strategies;
 
 import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
-import danogl.collisions.Layer;
 
 public class BasicCollisionStrategy implements CollisionStrategy {
     protected GameObjectCollection gameObjects;

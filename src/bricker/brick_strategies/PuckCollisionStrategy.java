@@ -7,7 +7,7 @@ import danogl.util.Vector2;
 
 public class PuckCollisionStrategy extends BasicCollisionStrategy {
 
-    private Ball puck1, puck2;
+    private final Ball puck1, puck2;
 
     public PuckCollisionStrategy(GameObjectCollection gameObjects, int object1Layer,
                                  Ball puck1, Ball puck2) {
