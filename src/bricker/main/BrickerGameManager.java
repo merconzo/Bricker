@@ -142,20 +142,33 @@ public class BrickerGameManager extends GameManager {
 		String prompt = "";
 		if (this.lifeNumericCounter.getLifeCount() == 0) {
 			prompt = "You Lose!";
-//			setExtraPaddle(null);  // TODO: why?
 		}
 		if (Brick.totalNumberOfBricks <= 0 || this.inputListener.isKeyPressed(KeyEvent.VK_W)) {
 			prompt = "You Win!";
-//			setExtraPaddle(null); // TODO: why?
 		}
 		if (!prompt.isEmpty()) {
 			prompt += " Play again?";
 			if (windowController.openYesNoDialog(prompt)) {
-//				Brick.totalNumberOfBricks = 0;
+				clearTableBeforeNewGame(); //removes all extra objects (pucks, extra paddle, bricks that left)
 				windowController.resetGame();
 			} else
 				windowController.closeWindow();
 		}
+	}
+
+	/**
+	 * clears all extra game objects before restart game
+	 */
+	private void clearTableBeforeNewGame() {
+		if (extraPaddle != null) {
+			gameObjects().removeGameObject(extraPaddle);
+		}
+		setExtraPaddle(null);
+		Brick.totalNumberOfBricks = 0;
+		for (Ball ball: extraBallsList) {
+			gameObjects().removeGameObject(ball);
+		}
+		extraBallsList.clear();
 	}
 
 
