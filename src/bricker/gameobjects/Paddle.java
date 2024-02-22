@@ -38,6 +38,7 @@ public class Paddle extends GameObject {
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
+		// move with arrow keys
 		Vector2 movementDir = Vector2.ZERO;
 		if (inputListener.isKeyPressed(KeyEvent.VK_LEFT)) {
 			movementDir = movementDir.add(Vector2.LEFT);
@@ -47,6 +48,7 @@ public class Paddle extends GameObject {
 		}
 		setVelocity(movementDir.mult(MOVEMENT_SPEED));
 
+		// keep borders bound
 		if (getTopLeftCorner().x() < bordersWidth) {
 			setTopLeftCorner(new Vector2(bordersWidth, getTopLeftCorner().y()));
 		} else if (getTopLeftCorner().x() >
@@ -60,7 +62,8 @@ public class Paddle extends GameObject {
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
 		super.onCollisionEnter(other, collision);
-		if (other instanceof Ball) {  // TODO: maybe instanceof is bad?
+		if (other instanceof Ball) {
+			// TODO: maybe instanceof is bad, and we can use shouldCollide
 			collisionCounter++;
 		}
 
