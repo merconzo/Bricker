@@ -60,14 +60,14 @@ public class BrickerGameManager extends GameManager {
 	private static WindowController windowController;
 	private static ImageReader imageReader;
 	private static UserInputListener inputListener;
+	private static Sound collisionSound;
+	private static Paddle extraPaddle = null;
 	private static final Random rand = new Random();
 	private static final ArrayList<Ball> extraBallsList = new ArrayList<>();
 	private final Vector2 windowDimensions;
 	private Ball ball;
 	private LifeNumericCounter lifeNumericCounter;
 	private LifeHeartsCounter lifeHeartsCounter;
-	private static Sound collisionSound;
-	private static Paddle extraPaddle = null;
 
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -144,7 +144,8 @@ public class BrickerGameManager extends GameManager {
 		if (!prompt.isEmpty()) {
 			prompt += " Play again?";
 			if (windowController.openYesNoDialog(prompt)) {
-				clearTableBeforeNewGame(); //removes all extra objects (pucks, extra paddle, bricks that left)
+				clearTableBeforeNewGame(); //removes all extra objects (pucks, extra paddle, bricks that
+				// left)
 				windowController.resetGame();
 			} else
 				windowController.closeWindow();
@@ -160,7 +161,7 @@ public class BrickerGameManager extends GameManager {
 		}
 		setExtraPaddle(null);
 		Brick.totalNumberOfBricks = 0;
-		for (Ball ball: extraBallsList) {
+		for (Ball ball : extraBallsList) {
 			gameObjects().removeGameObject(ball);
 		}
 		extraBallsList.clear();
