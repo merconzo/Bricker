@@ -66,6 +66,7 @@ public class BrickerGameManager extends GameManager {
 	private UserInputListener inputListener;
 	private static Sound collisionSound;
 	private static Paddle extraPaddle = null;
+
 	private static final Random rand = new Random();
 
 
@@ -259,9 +260,7 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(background, Layer.BACKGROUND);
 	}
 
-	private int getRandomInt(int min, int max) {
-		return rand.nextInt(max - min + 1) + min;
-	}
+
 
 
 	/**
@@ -273,7 +272,7 @@ public class BrickerGameManager extends GameManager {
 	private void createBricks(Vector2 windowDimensions, ImageReader imageReader) {
 		StrategiesFactory strategiesFactory = new StrategiesFactory(
 				BALL_RADIUS, windowDimensions, gameObjects(), BRICK_LAYER,
-				extraBallsList, collisionSound, imageReader, inputListener);
+				imageReader, inputListener);
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
 		float brickWidth =
@@ -283,11 +282,10 @@ public class BrickerGameManager extends GameManager {
 			float brickLeftY = BRICK_HEIGHT * i + BORDER_WIDTH + (3 * i);
 			for (int j = 0; j < this.brickColumns; j++) {
 				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY);
-				int strategyNum = getRandomInt(5, 7);
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
 						brickImage, null, BRICK_LAYER);
-				CollisionStrategy brickStrategy = strategiesFactory.returnRightStrategy(strategyNum, brick);
+				CollisionStrategy brickStrategy = strategiesFactory.returnRightStrategy(brick.getCenter());
 				brick.setCollisionStrategy(brickStrategy);
 				gameObjects().addGameObject(brick, BRICK_LAYER);
 
