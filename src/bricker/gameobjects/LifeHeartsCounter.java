@@ -13,7 +13,6 @@ public class LifeHeartsCounter implements LifeCounter {
 	private int lifeCount;
 	private final Heart[] hearts;
 
-
 	public LifeHeartsCounter(GameObjectCollection gameObjects, int layer,
 							 Vector2 topLeftCorner,
 							 int heartSize,

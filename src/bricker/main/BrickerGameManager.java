@@ -92,25 +92,18 @@ public class BrickerGameManager extends GameManager {
 		BrickerGameManager.inputListener = inputListener;
 		collisionSound = soundReader.readSound(COLLISION_SOUND_PATH);
 
-		// add mainBall
-		addMainBall();
+		addMainBall();  // add mainBall
+		addBorders(); // create borders
+		addBackground(); // create background
+		addBricks();  // add Bricks
 
 		// create paddle
 		Paddle mainPaddle = createPaddle(this.windowDimensions);
 		gameObjects().addGameObject(mainPaddle);
 
-		// create borders
-		addBorders(windowDimensions);
-
-		// create background
-		addBackground(windowDimensions, imageReader);
-
-		// add Bricks
-		createBricks(windowDimensions, imageReader);
-
 		// add life counters
-		createLifeNumericCounter(windowDimensions);
-		createLifeHeartsCounter(windowDimensions, imageReader);
+		addLifeNumericCounter();
+		addLifeHeartsCounter();
 	}
 
 	@Override
@@ -232,7 +225,7 @@ public class BrickerGameManager extends GameManager {
 		}
 	}
 
-	private void addBorders(Vector2 windowDimensions) {
+	private void addBorders() {
 		GameObject border_right = new GameObject(
 				new Vector2((int) windowDimensions.x() - BORDER_WIDTH, 0),
 				new Vector2(BORDER_WIDTH, (int) windowDimensions.y()),
@@ -250,7 +243,7 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(border_up);
 	}
 
-	private void addBackground(Vector2 windowDimensions, ImageReader imageReader) {
+	private void addBackground() {
 		Renderable backgroundImage = imageReader.readImage(
 				BACKGROUND_IMG_PATH, false);
 		GameObject background = new GameObject(
@@ -262,11 +255,8 @@ public class BrickerGameManager extends GameManager {
 
 	/**
 	 * Method to create bricks and add them to the game.
-	 *
-	 * @param windowDimensions The dimensions of the game window.
-	 * @param imageReader      The image reader for loading brick images.
 	 */
-	private void createBricks(Vector2 windowDimensions, ImageReader imageReader) {
+	private void addBricks() {
 		StrategiesFactory strategiesFactory = new StrategiesFactory(
 				BALL_RADIUS, windowDimensions, gameObjects(), BRICK_LAYER,
 				imageReader, inputListener);
@@ -292,8 +282,7 @@ public class BrickerGameManager extends GameManager {
 
 	}
 
-	private void createLifeNumericCounter(Vector2 windowDimensions) {
-
+	private void addLifeNumericCounter() {
 		TextRenderable counterRenderable = new TextRenderable("0");
 		this.lifeNumericCounter = new LifeNumericCounter(
 				new Vector2(BORDER_WIDTH + COUNTER_DISTANCE,
@@ -304,7 +293,7 @@ public class BrickerGameManager extends GameManager {
 		gameObjects().addGameObject(this.lifeNumericCounter, LIFE_COUNTER_LAYER);
 	}
 
-	private void createLifeHeartsCounter(Vector2 windowDimensions, ImageReader imageReader) {
+	private void addLifeHeartsCounter() {
 		Renderable heartImage = imageReader.readImage(
 				HEART_IMG_PATH, true);
 		int maxLife = this.lifeNumericCounter.getMaxLife();
