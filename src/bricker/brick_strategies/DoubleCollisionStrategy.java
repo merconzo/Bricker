@@ -9,21 +9,23 @@ import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 
 public class DoubleCollisionStrategy extends BasicCollisionStrategy {
-     private final CollisionStrategy firstCollisionStrategy;
-     private final CollisionStrategy secondCollisionStrategy;
+    private final CollisionStrategy firstCollisionStrategy;
+    private final CollisionStrategy secondCollisionStrategy;
 
     /**
-     *
      * @param gameObjects             The game object collection.
      * @param object1Layer            The layer of the object that has the collision strategy as a param.
      * @param firstCollisionStrategy  The first collision strategy to combine.
      * @param secondCollisionStrategy The second collision  to combine.
      */
-    public DoubleCollisionStrategy(GameObjectCollection gameObjects, int object1Layer, CollisionStrategy firstCollisionStrategy, CollisionStrategy secondCollisionStrategy) {
+    public DoubleCollisionStrategy(GameObjectCollection gameObjects, int object1Layer,
+                                   CollisionStrategy firstCollisionStrategy,
+                                   CollisionStrategy secondCollisionStrategy) {
         super(gameObjects, object1Layer);
         this.firstCollisionStrategy = firstCollisionStrategy;
         this.secondCollisionStrategy = secondCollisionStrategy;
     }
+
     /**
      * Overrides the onCollision method to combine the onCollision methods of both firstCollisionStrategy
      * and secondCollisionStrategy.
@@ -35,6 +37,7 @@ public class DoubleCollisionStrategy extends BasicCollisionStrategy {
     public void onCollision(GameObject object1, GameObject object2) {
         super.onCollision(object1, object2);
         firstCollisionStrategy.onCollision(object1, object2);
-        secondCollisionStrategy.onCollision(object1, object2);
-    }
+        secondCollisionStrategy. onCollision(object1,object2);
+        }
 }
+

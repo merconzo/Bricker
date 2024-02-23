@@ -3,9 +3,12 @@ package bricker.brick_strategies;
 import danogl.GameManager;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
+import danogl.gui.UserInputListener;
+import danogl.gui.rendering.Renderable;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
+import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

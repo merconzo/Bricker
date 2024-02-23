@@ -38,7 +38,8 @@ public class PaddleCollisionStrategy extends BasicCollisionStrategy {
             Paddle extraPaddle = bricker.main.BrickerGameManager.createPaddle(windowDimensions);
             // Set the position of paddle at the center
             extraPaddle.setCenter((new Vector2(windowDimensions.x() / 2, windowDimensions.y() / 2)));
-            gameObjects.addGameObject(extraPaddle); //adding game
+            bricker.main.BrickerGameManager.setExtraPaddle(extraPaddle);
+            gameObjects.addGameObject(extraPaddle); //adding to game
 
         }
     }

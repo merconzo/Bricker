@@ -74,6 +74,7 @@ public class BrickerGameManager extends GameManager {
 	private int lastCameraStampCounter = NOT_STAMPED;
 
 
+
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
 		this(windowTitle, windowDimensions, DEFAULT_BRICK_ROW, DEFAULT_BRICK_COLUMN);
 	}
@@ -85,7 +86,6 @@ public class BrickerGameManager extends GameManager {
 		this.brickRows = brickRows;
 		this.brickColumns = brickColumn;
 	}
-
 
 
 	@Override
@@ -326,6 +326,7 @@ public class BrickerGameManager extends GameManager {
 						(int) windowDimensions.y() - LIFE_COUNTER_SIZE - COUNTER_DISTANCE),
 				LIFE_COUNTER_SIZE, heartImage, maxLife, lifeCount
 		);
+		//		gameObjects().addGameObject(this.lifeHeartsCounter, LIFE_COUNTER_LAYER);
 
 	}
 
@@ -333,7 +334,7 @@ public class BrickerGameManager extends GameManager {
 	public static void main(String[] args) {
 		GameManager gameManager = new BrickerGameManager(
 				WINDOW_TITLE,
-				new Vector2(WINDOW_X_DIMS, WINDOW_Y_DIMS), 2, 3);
+				new Vector2(WINDOW_X_DIMS, WINDOW_Y_DIMS));
 		// TODO change numbers
 		gameManager.run();
 	}
