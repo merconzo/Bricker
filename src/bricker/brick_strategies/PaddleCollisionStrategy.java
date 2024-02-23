@@ -19,7 +19,8 @@ public class PaddleCollisionStrategy extends BasicCollisionStrategy {
      * @param object1Layer     The layer of the that has the collision strategy as a param.
      * @param windowDimensions The dimensions of the game window for centering the paddle.
      */
-    public PaddleCollisionStrategy(GameObjectCollection gameObjects, int object1Layer, Vector2 windowDimensions) {
+    public PaddleCollisionStrategy(GameObjectCollection gameObjects, int object1Layer,
+                                   Vector2 windowDimensions) {
         super(gameObjects, object1Layer);
         this.windowDimensions = windowDimensions;
     }

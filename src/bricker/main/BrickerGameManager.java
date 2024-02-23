@@ -32,6 +32,7 @@ public class BrickerGameManager extends GameManager {
 	private static final int COUNTER_DISTANCE = 10;
 	private static final int PADDLE_DISTANCE = LIFE_COUNTER_SIZE + 3 * COUNTER_DISTANCE;
 	private static final int EXTRA_PADDLE_MAX_HITS = 4;
+	private static final int COLLISIONS_TO_CAMERA_RESET = 4;
 
 	// Layers
 	private static final int BRICK_LAYER = Layer.STATIC_OBJECTS;
@@ -46,18 +47,20 @@ public class BrickerGameManager extends GameManager {
 	public static final String BRICK_IMG_PATH = "assets/brick.png";
 	public static final String HEART_IMG_PATH = "assets/heart.png";
 
-	// GUI
+	// GUI & constants
 	private static final String WINDOW_TITLE = "BRICKER!";
 	private static final int WINDOW_X_DIMS = 700;
 	private static final int WINDOW_Y_DIMS = 500;
 	private static final Color BORDER_COLOR = Color.BLUE;
+	private static final String MAIN_BALL_TAG = "mainBall";
+	private static final int NOT_STAMPED = -1;
 
 	// bricks number
 	private final int brickRows;
 	private final int brickColumns;
 
 	// fields
-	private static WindowController windowController;
+	private WindowController windowController;
 	private static ImageReader imageReader;
 	private static UserInputListener inputListener;
 	private static Sound collisionSound;
@@ -68,6 +71,7 @@ public class BrickerGameManager extends GameManager {
 	private Ball ball;
 	private LifeNumericCounter lifeNumericCounter;
 	private LifeHeartsCounter lifeHeartsCounter;
+	private int lastCameraStampCounter = NOT_STAMPED;
 
 
 	public BrickerGameManager(String windowTitle, Vector2 windowDimensions) {
@@ -83,11 +87,12 @@ public class BrickerGameManager extends GameManager {
 	}
 
 
+
 	@Override
 	public void initializeGame(ImageReader imageReader, SoundReader soundReader,
 							   UserInputListener inputListener, WindowController windowController) {
 		super.initializeGame(imageReader, soundReader, inputListener, windowController);
-		BrickerGameManager.windowController = windowController;
+		this.windowController = windowController;
 		BrickerGameManager.imageReader = imageReader;
 		BrickerGameManager.inputListener = inputListener;
 		collisionSound = soundReader.readSound(COLLISION_SOUND_PATH);
@@ -104,6 +109,7 @@ public class BrickerGameManager extends GameManager {
 		// add life counters
 		addLifeNumericCounter();
 		addLifeHeartsCounter();
+
 	}
 
 	@Override
@@ -112,6 +118,19 @@ public class BrickerGameManager extends GameManager {
 		checkRemoveExtraPaddle();
 		checkGameEnd();
 		checkFallingBalls();
+		checkCamera();
+	}
+
+	private void checkCamera() {
+		if (camera() == null)
+			return;
+		if (this.lastCameraStampCounter == NOT_STAMPED)
+			this.lastCameraStampCounter = this.ball.getCollisionCounter();
+		int collisionsSinceCameraStamp = this.ball.getCollisionCounter() - this.lastCameraStampCounter;
+		if (collisionsSinceCameraStamp >= COLLISIONS_TO_CAMERA_RESET) { // reset
+			setCamera(null);
+			this.lastCameraStampCounter = NOT_STAMPED;
+		}
 	}
 
 	private void checkFallingBalls() {
@@ -128,6 +147,7 @@ public class BrickerGameManager extends GameManager {
 			}
 		}
 	}
+
 
 	private boolean isBallOut(Ball ball) {
 		return ball.getCenter().y() > windowDimensions.y();
@@ -170,11 +190,12 @@ public class BrickerGameManager extends GameManager {
 
 	private void addMainBall() {
 		Renderable ballImage = imageReader.readImage(BALL_IMG_PATH, true);
-		this.ball = createBall(ballImage, BALL_RADIUS, windowDimensions.mult(0.5f));
+		this.ball = addBall(ballImage, BALL_RADIUS, windowDimensions.mult(0.5f));
+		this.ball.setTag(MAIN_BALL_TAG);
 		gameObjects().addGameObject(ball);
 	}
 
-	public static Ball createBall(Renderable ballImage, int ballRadius, Vector2 center) {
+	public static Ball addBall(Renderable ballImage, int ballRadius, Vector2 center) {
 		Ball ball = new Ball(
 				Vector2.ZERO, new Vector2(ballRadius, ballRadius), ballImage, collisionSound);
 		setBallToCenter(center, ball);
@@ -259,8 +280,8 @@ public class BrickerGameManager extends GameManager {
 	 */
 	private void addBricks() {
 		StrategiesFactory strategiesFactory = new StrategiesFactory(
-				BALL_RADIUS, windowDimensions, gameObjects(), BRICK_LAYER,
-				imageReader, inputListener);
+				(int) (0.75 * BALL_RADIUS), windowDimensions, gameObjects(), BRICK_LAYER,
+				imageReader, this, MAIN_BALL_TAG);
 		Renderable brickImage = imageReader.readImage(
 				BRICK_IMG_PATH, false);
 		float brickWidth =
@@ -273,7 +294,7 @@ public class BrickerGameManager extends GameManager {
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
 						brickImage, null, BRICK_LAYER);
-				CollisionStrategy brickStrategy = strategiesFactory.returnRightStrategy(brick.getCenter());
+				CollisionStrategy brickStrategy = strategiesFactory.buildStrategy(brick.getCenter());
 				brick.setCollisionStrategy(brickStrategy);
 				gameObjects().addGameObject(brick, BRICK_LAYER);
 

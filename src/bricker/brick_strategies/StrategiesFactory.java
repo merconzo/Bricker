@@ -1,108 +1,122 @@
 package bricker.brick_strategies;
 
-import bricker.gameobjects.Ball;
+import danogl.GameManager;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
-import danogl.gui.UserInputListener;
-import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
-import java.util.ArrayList;
 import java.util.Random;
 
 public class StrategiesFactory {
 
-    //assets
-    private static final String PUCK_IMG_PATH = "assets/mockBall.png";
-    private final int puckBallRadius;
-
+	//assets
+	private final int puckBallRadius;
+    private final GameManager gameManager;
+    private final String ballTag;
     private final Vector2 windowDimensions;
 
+
+	//helpers
+	private static final Random rand = new Random();
+	private final int DEFAULT_MIN = 1;
+	private final int DEFAULT_MAX = 10;
+	private int minNum = DEFAULT_MIN;
+	private int maxNum = DEFAULT_MAX;
+
+	private int doublesCounter = 0;
+
+
+	//GameObjects
+	private final GameObjectCollection gameObjects;
+	private final int object1Layer;
+	private final ImageReader imageReader;
     private Vector2 brickCenter;
 
-    //helpers
-    private static final Random rand = new Random();
-    private final int DEFAULT_MIN = 1;
-    private final int DEFAULT_MAX = 10;
-    private int minNum = DEFAULT_MIN;
-    private int maxNum = DEFAULT_MAX;
 
-    private int doublesCounter = 0;
-
-
-
-    //GameObjects
-    private final GameObjectCollection gameObjects;
-    private final int object1Layer;
-    private ArrayList<Ball> extraBallsList;
-    private final ImageReader imageReader;
-    private final UserInputListener inputListener;
-
-
-    public StrategiesFactory(int mainBallRadius, Vector2 windowDimensions,
+    public StrategiesFactory(int puckBallRadius, Vector2 windowDimensions,
                              GameObjectCollection gameObjects, int object1Layer,
-                             ImageReader imageReader, UserInputListener inputListener) {
-        this.windowDimensions = windowDimensions;
-        this.gameObjects = gameObjects;
-        this.object1Layer = object1Layer;
-        this.imageReader = imageReader;
-        this.puckBallRadius = (int) (0.75 * mainBallRadius);
-        this.inputListener = inputListener;
+                             ImageReader imageReader, GameManager gameManager, String ballTag) {
+		this.windowDimensions = windowDimensions;
+		this.gameObjects = gameObjects;
+		this.object1Layer = object1Layer;
+		this.imageReader = imageReader;
+		//        this.puckBallRadius = (int) (0.75 * mainBallRadius);
+		this.puckBallRadius = puckBallRadius;
 
+        this.gameManager = gameManager;
+        this.ballTag = ballTag;
     }
 
-    public CollisionStrategy returnRightStrategy (Vector2 brickCenter) {
-        int randomNum = getRandomInt(minNum,maxNum);
-        System.out.println(randomNum);
+	public CollisionStrategy buildStrategy(Vector2 brickCenter) {
+//        return getCameraStrategy();
         this.brickCenter = brickCenter;
-        if (randomNum == 6) {
-            return (createPuckStrategy());
+		int randomNum = getRandomInt(minNum, maxNum);
+		System.out.println(randomNum);
+        if (randomNum == 4) {
+            return getCameraStrategy();
         }
-        if (randomNum == 7) {
-            return (createPaddleStrategy());
-        }
-        if (randomNum == 10) {
-            doublesCounter++;
-            if (doublesCounter >= 2) {
-                this.maxNum = 9;
-            }
-            return (createDoubleStrategy());
-        }
-        else {
-            return new BasicCollisionStrategy(gameObjects, object1Layer);
-        }
+		if (randomNum == 6) {
+			return createPuckStrategy(brickCenter);
+		}
+		if (randomNum == 7) {
+			return createPaddleStrategy();
+		}
+		if (randomNum == 10) {
+			doublesCounter++;
+			if (doublesCounter >= 2) {
+				this.maxNum = 9;
+			}
+			return createDoubleStrategy();
+		} else {
+			return new BasicCollisionStrategy(gameObjects, object1Layer);
+		}
+	}
+
+//	public CollisionStrategy buildStrategy(Strategies strategy, Vector2 brickCenter) {
+//		switch (strategy) {
+//        case DOUBLE {
+//
+//        }
+//		case PUCK -> {
+//			return createPuckStrategy(brickCenter);
+//		}
+//        return getBasicStrategy();
+//	}
+
+	private CollisionStrategy createPuckStrategy (Vector2 brickCenter) {
+		return new PuckCollisionStrategy(gameObjects, object1Layer, imageReader, puckBallRadius,
+                brickCenter);
+	}
+
+	private CollisionStrategy createPaddleStrategy() {
+		return new PaddleCollisionStrategy(gameObjects,
+				object1Layer, windowDimensions);
+	}
+
+	private CollisionStrategy createDoubleStrategy() {
+		this.minNum = 6;
+		CollisionStrategy firstStrategy = buildStrategy(this.brickCenter);
+		CollisionStrategy secondStrategy = buildStrategy(this.brickCenter);
+		setDefaultMinMax();
+		return new DoubleCollisionStrategy(gameObjects, object1Layer, firstStrategy, secondStrategy);
+	}
+
+    private CollisionStrategy getBasicStrategy() {
+        return new BasicCollisionStrategy(gameObjects, object1Layer);
     }
 
-    private PuckCollisionStrategy createPuckStrategy () {
-        // TODO: more than 2 pucks? LO HEVANTI MA HASHEELA
-       Renderable puckImg = imageReader.readImage(PUCK_IMG_PATH, true);
-       Ball puck1 = bricker.main.BrickerGameManager.createBall(puckImg, puckBallRadius, brickCenter);
-       Ball puck2 = bricker.main.BrickerGameManager.createBall(puckImg, puckBallRadius, brickCenter);
-       bricker.main.BrickerGameManager.addToExtraBallsList(puck1);
-       bricker.main.BrickerGameManager.addToExtraBallsList(puck2);
-       return new PuckCollisionStrategy(gameObjects, object1Layer, puck1, puck2);
+    private CollisionStrategy getCameraStrategy() {
+        return new CameraCollisionStrategy(
+                gameObjects, object1Layer, gameManager, windowDimensions, ballTag);
     }
 
-    private PaddleCollisionStrategy createPaddleStrategy(){
-        return new PaddleCollisionStrategy(gameObjects,
-                object1Layer, windowDimensions);
-    }
+	private int getRandomInt(int min, int max) {
+		return rand.nextInt(max - min + 1) + min;
+	}
 
-    private DoubleCollisionStrategy createDoubleStrategy(){
-        this.minNum = 6;
-        CollisionStrategy firstStrategy = returnRightStrategy(this.brickCenter);
-        CollisionStrategy secondStrategy = returnRightStrategy(this.brickCenter);
-        setDefaultMinMax();
-        return new DoubleCollisionStrategy(gameObjects, object1Layer,firstStrategy, secondStrategy);
-    }
-
-    private int getRandomInt(int min, int max) {
-        return rand.nextInt(max - min + 1) + min;
-    }
-
-    private void setDefaultMinMax() {
-        this.maxNum = DEFAULT_MAX;
-        this.minNum = DEFAULT_MIN;
-    }
+	private void setDefaultMinMax() {
+		this.maxNum = DEFAULT_MAX;
+		this.minNum = DEFAULT_MIN;
+	}
 
 }
