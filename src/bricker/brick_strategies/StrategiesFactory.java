@@ -6,6 +6,8 @@ import danogl.gui.ImageReader;
 import danogl.util.Counter;
 import danogl.util.Vector2;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class StrategiesFactory {
@@ -92,11 +94,10 @@ public class StrategiesFactory {
 				object1Layer, windowDimensions);
 	}
 
-	private CollisionStrategy createDoubleStrategy() {
-		this.minNum = 6;
-		CollisionStrategy firstStrategy = buildStrategy(this.brickCenter);
-		CollisionStrategy secondStrategy = buildStrategy(this.brickCenter);
-		setDefaultMinMax();
+
+	private CollisionStrategy createDoubleStrategy(Vector2 brickCenter) {
+		CollisionStrategy firstStrategy = getNewCollisionStrategy(getRandomStrategy(true), brickCenter);
+		CollisionStrategy secondStrategy = getNewCollisionStrategy(getRandomStrategy(true), brickCenter);
 		return new DoubleCollisionStrategy(gameObjects, object1Layer, firstStrategy, secondStrategy);
 	}
 
