@@ -294,7 +294,7 @@ public class BrickerGameManager extends GameManager {
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
 						brickImage, null, BRICK_LAYER);
-				CollisionStrategy brickStrategy = strategiesFactory.buildStrategy(brick.getCenter());
+				CollisionStrategy brickStrategy = strategiesFactory.buildRandomStrategy(brick.getCenter());
 				brick.setCollisionStrategy(brickStrategy);
 				gameObjects().addGameObject(brick, BRICK_LAYER);
 

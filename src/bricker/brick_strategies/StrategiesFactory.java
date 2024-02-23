@@ -3,39 +3,36 @@ package bricker.brick_strategies;
 import danogl.GameManager;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.ImageReader;
+import danogl.util.Counter;
 import danogl.util.Vector2;
 
 import java.util.Random;
 
 public class StrategiesFactory {
 
+	private static final int MAX_DOUBLES_COUNTER = 2;
 	//assets
 	private final int puckBallRadius;
-    private final GameManager gameManager;
-    private final String ballTag;
-    private final Vector2 windowDimensions;
+	private final GameManager gameManager;
+	private final String ballTag;
+	private final Vector2 windowDimensions;
 
 
 	//helpers
 	private static final Random rand = new Random();
-	private final int DEFAULT_MIN = 1;
-	private final int DEFAULT_MAX = 10;
-	private int minNum = DEFAULT_MIN;
-	private int maxNum = DEFAULT_MAX;
-
-	private int doublesCounter = 0;
+	private final Counter doublesCounter = new Counter();
 
 
 	//GameObjects
 	private final GameObjectCollection gameObjects;
 	private final int object1Layer;
 	private final ImageReader imageReader;
-    private Vector2 brickCenter;
+	private Vector2 brickCenter;
 
 
-    public StrategiesFactory(int puckBallRadius, Vector2 windowDimensions,
-                             GameObjectCollection gameObjects, int object1Layer,
-                             ImageReader imageReader, GameManager gameManager, String ballTag) {
+	public StrategiesFactory(int puckBallRadius, Vector2 windowDimensions,
+							 GameObjectCollection gameObjects, int object1Layer,
+							 ImageReader imageReader, GameManager gameManager, String ballTag) {
 		this.windowDimensions = windowDimensions;
 		this.gameObjects = gameObjects;
 		this.object1Layer = object1Layer;
@@ -43,49 +40,51 @@ public class StrategiesFactory {
 		//        this.puckBallRadius = (int) (0.75 * mainBallRadius);
 		this.puckBallRadius = puckBallRadius;
 
-        this.gameManager = gameManager;
-        this.ballTag = ballTag;
-    }
+		this.gameManager = gameManager;
+		this.ballTag = ballTag;
+	}
 
-	public CollisionStrategy buildStrategy(Vector2 brickCenter) {
-//        return getCameraStrategy();
-        this.brickCenter = brickCenter;
-		int randomNum = getRandomInt(minNum, maxNum);
-		System.out.println(randomNum);
-        if (randomNum == 4) {
-            return getCameraStrategy();
-        }
-		if (randomNum == 6) {
-			return createPuckStrategy(brickCenter);
-		}
-		if (randomNum == 7) {
+	/**
+	 * returns specific CollisionStrategy.
+	 * @param strategy Enum of wanted Strategy.
+	 * @param objectCenter collied object's center (usually brick).
+	 * @return CollisionStrategy
+	 */
+	public CollisionStrategy buildStrategy(Strategy strategy, Vector2 objectCenter) {
+		CollisionStrategy chosen = getNewCollisionStrategy(strategy, objectCenter);
+		resetCounter();
+		return chosen;
+	}
+
+	/**
+	 * get a new random Strategy.
+	 * @param objectCenter collied object's center (usually brick)
+	 * @return new CollisionStrategy
+	 */
+	public CollisionStrategy buildRandomStrategy(Vector2 objectCenter) {
+		CollisionStrategy chosen = getNewCollisionStrategy(getRandomStrategy(false), objectCenter);
+		resetCounter();
+		return chosen;
+	}
+
+	private CollisionStrategy getNewCollisionStrategy(Strategy strategy, Vector2 objectCenter) {
+		switch (strategy) {
+		case PADDLE:
 			return createPaddleStrategy();
-		}
-		if (randomNum == 10) {
-			doublesCounter++;
-			if (doublesCounter >= 2) {
-				this.maxNum = 9;
-			}
-			return createDoubleStrategy();
-		} else {
-			return new BasicCollisionStrategy(gameObjects, object1Layer);
+		case CAMERA:
+			return createCameraStrategy();
+		case DOUBLE:
+			return createDoubleStrategy(objectCenter);
+		case PUCK:
+			return createPuckStrategy(objectCenter);
+		default:
+			return createBasicStrategy();
 		}
 	}
 
-//	public CollisionStrategy buildStrategy(Strategies strategy, Vector2 brickCenter) {
-//		switch (strategy) {
-//        case DOUBLE {
-//
-//        }
-//		case PUCK -> {
-//			return createPuckStrategy(brickCenter);
-//		}
-//        return getBasicStrategy();
-//	}
-
-	private CollisionStrategy createPuckStrategy (Vector2 brickCenter) {
+	private CollisionStrategy createPuckStrategy(Vector2 brickCenter) {
 		return new PuckCollisionStrategy(gameObjects, object1Layer, imageReader, puckBallRadius,
-                brickCenter);
+				brickCenter);
 	}
 
 	private CollisionStrategy createPaddleStrategy() {
@@ -101,22 +100,41 @@ public class StrategiesFactory {
 		return new DoubleCollisionStrategy(gameObjects, object1Layer, firstStrategy, secondStrategy);
 	}
 
-    private CollisionStrategy getBasicStrategy() {
-        return new BasicCollisionStrategy(gameObjects, object1Layer);
-    }
-
-    private CollisionStrategy getCameraStrategy() {
-        return new CameraCollisionStrategy(
-                gameObjects, object1Layer, gameManager, windowDimensions, ballTag);
-    }
-
-	private int getRandomInt(int min, int max) {
-		return rand.nextInt(max - min + 1) + min;
+	private Strategy getRandomStrategy(boolean isSpecial) {
+		List<Strategy> strategies = generateStrategiesToPick(isSpecial);
+		int ind = rand.nextInt(strategies.size());
+		Strategy chosen = strategies.get(ind);
+		if (chosen == Strategy.DOUBLE)
+			doublesCounter.increment();
+		return chosen;
 	}
 
-	private void setDefaultMinMax() {
-		this.maxNum = DEFAULT_MAX;
-		this.minNum = DEFAULT_MIN;
+	private List<Strategy> generateStrategiesToPick(boolean isSpecial) {
+		List<Strategy> strategies = new ArrayList<>();
+		for(Strategy strategy: Strategy.values()) {
+			if (isSpecial && strategy == Strategy.BASIC)
+				continue;
+			if (strategy == Strategy.DOUBLE && doublesCounter.value() >= MAX_DOUBLES_COUNTER)
+				continue;
+			int count =  (int) (strategy.getProbability() * 10);
+			for (int i = 0; i < count; i++)
+				strategies.add(strategy);
+		}
+		return strategies;
+	}
+
+
+	private CollisionStrategy createBasicStrategy() {
+		return new BasicCollisionStrategy(gameObjects, object1Layer);
+	}
+
+	private CollisionStrategy createCameraStrategy() {
+		return new CameraCollisionStrategy(
+				gameObjects, object1Layer, gameManager, windowDimensions, ballTag);
+	}
+
+	public void resetCounter() {
+		this.doublesCounter.reset();
 	}
 
 }
