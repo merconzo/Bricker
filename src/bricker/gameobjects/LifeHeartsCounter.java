@@ -1,31 +1,28 @@
 package bricker.gameobjects;
 
-import danogl.GameObject;
 import danogl.collisions.GameObjectCollection;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
-public class LifeHeartsCounter {
+import static java.lang.Math.max;
+
+public class LifeHeartsCounter implements LifeCounter {
 
 	private static final int SPACE_BETWEEN_HEARTS = 10;
 	private final int maxLife;
-	private int curLifeCount;
+	private int lifeCount;
 	private final Heart[] hearts;
-
 
 	public LifeHeartsCounter(GameObjectCollection gameObjects, int layer,
 							 Vector2 topLeftCorner,
 							 int heartSize,
 							 Renderable heartImage,
-							 int maxLifeCount, int initLifeCount) {
-//		super(topLeftCorner,
-//				new Vector2((heartSize + SPACE_BETWEEN_HEARTS) * maxLifeCount, heartSize),
-//				null);
-		this.maxLife = maxLifeCount;
-		this.curLifeCount = initLifeCount;
+							 int maxLife, int initLifeCount) {
+		this.lifeCount = max(initLifeCount, 1);  // 1 <= lifeCount
+		this.maxLife = max(maxLife, this.lifeCount);  // lifeCount <= maxLife
 		// create hearts
-		this.hearts = new Heart[maxLifeCount];
-		for (int i = 0; i < maxLifeCount; i++) {
+		this.hearts = new Heart[maxLife];
+		for (int i = 0; i < maxLife; i++) {
 			Vector2 curTopLeft = new Vector2(
 					topLeftCorner.x() + (heartSize + SPACE_BETWEEN_HEARTS) * i,
 					topLeftCorner.y());
@@ -41,7 +38,9 @@ public class LifeHeartsCounter {
 	}
 
 	public void setLifeCount(int lifeCount) {
-		this.curLifeCount = lifeCount;
+		if (lifeCount < 0 || lifeCount > maxLife)
+			return;
+		this.lifeCount = lifeCount;
 		for (int i = 0; i < lifeCount; i++) {
 			this.hearts[i].setVisibility(true);
 		}
@@ -51,17 +50,17 @@ public class LifeHeartsCounter {
 	}
 
 	public void minusLifeCount() {
-		if (this.curLifeCount == 0)
+		if (this.lifeCount == 0)
 			return;
-		this.curLifeCount--;
-		this.hearts[curLifeCount].setVisibility(false);
+		this.lifeCount--;
+		this.hearts[lifeCount].setVisibility(false);
 	}
 
 	public void plusLifeCount() {
-		if (this.curLifeCount == this.maxLife)
+		if (this.lifeCount == this.maxLife)
 			return;
-		this.hearts[curLifeCount].setVisibility(true);
-		this.curLifeCount++;
+		this.hearts[lifeCount].setVisibility(true);
+		this.lifeCount++;
 	}
 
 

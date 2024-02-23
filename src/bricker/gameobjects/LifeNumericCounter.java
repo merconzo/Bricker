@@ -6,7 +6,9 @@ import danogl.util.Vector2;
 
 import java.awt.*;
 
-public class LifeNumericCounter extends GameObject {
+import static java.lang.Math.max;
+
+public class LifeNumericCounter extends GameObject implements LifeCounter {
 	private static final int MAX_LIFE = 4;
 	private static final int INIT_LIFE = 3;
 	private static final Color DEFAULT_COLOR = Color.GREEN;
@@ -16,10 +18,15 @@ public class LifeNumericCounter extends GameObject {
 	private int lifeCount;
 
 	public LifeNumericCounter(Vector2 topLeftCorner, Vector2 dimensions, TextRenderable renderable) {
+		this(topLeftCorner, dimensions, renderable, INIT_LIFE, MAX_LIFE);
+	}
+
+	public LifeNumericCounter(Vector2 topLeftCorner, Vector2 dimensions, TextRenderable renderable,
+							  int lifeCount, int maxLife) {
 		super(topLeftCorner, dimensions, renderable);
 		this.renderable = renderable;
-		this.lifeCount = INIT_LIFE;
-		this.maxLife = MAX_LIFE;
+		this.lifeCount = max(lifeCount, 1);  // 1 <= lifeCount
+		this.maxLife = max(maxLife, this.lifeCount);  // lifeCount <= maxLife
 		render();
 	}
 
@@ -29,6 +36,13 @@ public class LifeNumericCounter extends GameObject {
 
 	public int getMaxLife() {
 		return maxLife;
+	}
+
+	public void setLifeCount(int lifeCount) {
+		if (lifeCount < 0 || lifeCount > maxLife)
+			return;
+		this.lifeCount = lifeCount;
+		render();
 	}
 
 	public void minusLifeCount() {
