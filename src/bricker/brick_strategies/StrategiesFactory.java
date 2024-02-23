@@ -11,25 +11,21 @@ import java.util.List;
 import java.util.Random;
 
 public class StrategiesFactory {
-
-	private static final int MAX_DOUBLES_COUNTER = 2;
 	//assets
 	private final int puckBallRadius;
 	private final GameManager gameManager;
 	private final String ballTag;
 	private final Vector2 windowDimensions;
 
-
 	//helpers
+	private static final int MAX_DOUBLES_COUNTER = 2;
 	private static final Random rand = new Random();
 	private final Counter doublesCounter = new Counter();
-
 
 	//GameObjects
 	private final GameObjectCollection gameObjects;
 	private final int object1Layer;
 	private final ImageReader imageReader;
-	private Vector2 brickCenter;
 
 
 	public StrategiesFactory(int puckBallRadius, Vector2 windowDimensions,
@@ -39,7 +35,6 @@ public class StrategiesFactory {
 		this.gameObjects = gameObjects;
 		this.object1Layer = object1Layer;
 		this.imageReader = imageReader;
-		//        this.puckBallRadius = (int) (0.75 * mainBallRadius);
 		this.puckBallRadius = puckBallRadius;
 
 		this.gameManager = gameManager;
