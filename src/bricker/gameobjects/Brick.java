@@ -3,9 +3,7 @@ package bricker.gameobjects;
 import bricker.brick_strategies.CollisionStrategy;
 import danogl.GameObject;
 import danogl.collisions.Collision;
-import danogl.collisions.Layer;
 import danogl.gui.rendering.Renderable;
-import danogl.util.Counter;
 import danogl.util.Vector2;
 
 public class Brick extends GameObject {
@@ -21,13 +19,13 @@ public class Brick extends GameObject {
     /**
      * Constructor for creating a Brick object.
      *
-     * @param topLeftCorner    Position of the top-left corner of the brick.
-     * @param dimensions       Width and height of the brick.
-     * @param renderable       Renderable object representing the brick.
-     * @param collisionStrategy   Collision strategy associated with the brick.
+     * @param topLeftCorner     Position of the top-left corner of the brick.
+     * @param dimensions        Width and height of the brick.
+     * @param renderable        Renderable object representing the brick.
+     * @param collisionStrategy Collision strategy associated with the brick.
      */
     public Brick(Vector2 topLeftCorner, Vector2 dimensions,
-                 Renderable renderable, CollisionStrategy collisionStrategy, int brickLayer)  {
+                 Renderable renderable, CollisionStrategy collisionStrategy)  {
         super(topLeftCorner, dimensions, renderable);
         this.collisionStrategy = collisionStrategy;
         totalNumberOfBricks++;

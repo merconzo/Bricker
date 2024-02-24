@@ -6,18 +6,14 @@ package bricker.brick_strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
-import danogl.collisions.GameObjectCollection;
-import danogl.util.Vector2;
 
 public class PaddleCollisionStrategy extends BasicCollisionStrategy {
-    private final Vector2 windowDimensions;
 
     /**
      * Constructs a PaddleCollisionStrategy.
      *
      * @param gameManager      The game manager.
      * @param object1Layer     The layer of the that has the collision strategy as a param.
-     * @param windowDimensions The dimensions of the game window for centering the paddle.
      */
     public PaddleCollisionStrategy(BrickerGameManager gameManager, int object1Layer) {
         super(gameManager, object1Layer);

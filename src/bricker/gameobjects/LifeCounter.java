@@ -7,6 +7,8 @@ public interface LifeCounter {
 
 	void plusLifeCount();
 	void minusLifeCount();
+	int getLifeCount();
+	int getMaxLife();
 	void setLifeCount(int lifeCount);
 
 }

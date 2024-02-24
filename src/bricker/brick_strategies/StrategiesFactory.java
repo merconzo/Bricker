@@ -1,24 +1,16 @@
 package bricker.brick_strategies;
 
-import danogl.GameManager;
-import danogl.collisions.GameObjectCollection;
-import danogl.gui.ImageReader;
-import danogl.gui.UserInputListener;
-import danogl.gui.rendering.Renderable;
+import bricker.main.BrickerGameManager;
 import danogl.util.Counter;
-import danogl.util.Vector2;
 
-import java.util.ArrayList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class StrategiesFactory {
 	//assets
-	private final int puckBallRadius;
-	private final GameManager gameManager;
-	private final String ballTag;
-	private final Vector2 windowDimensions;
+
+	private final BrickerGameManager gameManager;
 
 	//helpers
 	private static final int MAX_DOUBLES_COUNTER = 2;
@@ -26,65 +18,76 @@ public class StrategiesFactory {
 	private final Counter doublesCounter = new Counter();
 
 	//GameObjects
-	private final GameObjectCollection gameObjects;
 	private final int object1Layer;
-	private final ImageReader imageReader;
 
-
-	public StrategiesFactory(int puckBallRadius, Vector2 windowDimensions,
-							 GameObjectCollection gameObjects, int object1Layer,
-							 ImageReader imageReader, GameManager gameManager, String ballTag) {
-		this.windowDimensions = windowDimensions;
-		this.gameObjects = gameObjects;
-		this.object1Layer = object1Layer;
-		this.imageReader = imageReader;
-		this.puckBallRadius = puckBallRadius;
-
+	/**
+	 * constructor of strategies factory.
+	 * @param gameManager bricker game manager
+	 * @param object1Layer layer of object1
+	 */
+	public StrategiesFactory(BrickerGameManager gameManager, int object1Layer) {
 		this.gameManager = gameManager;
-		this.ballTag = ballTag;
+		this.object1Layer = object1Layer;
+
 	}
 
 	/**
 	 * returns specific CollisionStrategy.
 	 * @param strategy Enum of wanted Strategy.
-	 * @param objectCenter collied object's center (usually brick).
 	 * @return CollisionStrategy
 	 */
-	public CollisionStrategy buildStrategy(Strategy strategy, Vector2 objectCenter) {
-		CollisionStrategy chosen = getNewCollisionStrategy(strategy, objectCenter);
+	public CollisionStrategy buildStrategy(Strategy strategy) {
+		CollisionStrategy chosen = getNewCollisionStrategy(strategy);
 		resetCounter();
 		return chosen;
 	}
 
 	/**
 	 * get a new random Strategy.
-	 * @param objectCenter collied object's center (usually brick)
 	 * @return new CollisionStrategy
 	 */
-	public CollisionStrategy buildRandomStrategy(Vector2 objectCenter) {
-		CollisionStrategy chosen = getNewCollisionStrategy(getRandomStrategy(false), objectCenter);
+	public CollisionStrategy buildRandomStrategy() {
+		CollisionStrategy chosen = getNewCollisionStrategy(getRandomStrategy(false));
 		resetCounter();
 		return chosen;
 	}
 
-	private CollisionStrategy getNewCollisionStrategy(Strategy strategy, Vector2 objectCenter) {
+	/**
+	 * enum switch to choose the wanted strategy
+	 * @param strategy enum of strategy
+	 * @return Collision strategy
+	 */
+	private CollisionStrategy getNewCollisionStrategy(Strategy strategy) {
 		switch (strategy) {
+		case LIFE:
+			return createLifeStrategy();
 		case PADDLE:
 			return createPaddleStrategy();
 		case CAMERA:
 			return createCameraStrategy();
 		case DOUBLE:
-			return createDoubleStrategy(objectCenter);
+			return createDoubleStrategy();
 		case PUCK:
-			return createPuckStrategy(objectCenter);
+			return createPuckStrategy();
 		default:
 			return createBasicStrategy();
 		}
 	}
 
-	private CollisionStrategy createPuckStrategy(Vector2 brickCenter) {
-		return new PuckCollisionStrategy(gameObjects, object1Layer, imageReader, puckBallRadius,
-				brickCenter);
+	/**
+	 *
+	 * @return new LifeCollisionStrategy
+	 */
+	private CollisionStrategy createLifeStrategy() {
+		return new LifeCollisionStrategy(gameManager, object1Layer);
+	}
+
+	/**
+	 *
+	 * @return new PuckCollisionStrategy
+	 */
+	private CollisionStrategy createPuckStrategy() {
+		return new PuckCollisionStrategy(gameManager, object1Layer);
 	}
 
 	/**
@@ -92,15 +95,17 @@ public class StrategiesFactory {
 	 * @return new PaddleCollisionStrateg
 	 */
 	private CollisionStrategy createPaddleStrategy() {
-		return new PaddleCollisionStrategy(gameObjects,
-				object1Layer, windowDimensions);
+		return new PaddleCollisionStrategy(gameManager, object1Layer);
 	}
 
-
-	private CollisionStrategy createDoubleStrategy(Vector2 brickCenter) {
-		CollisionStrategy firstStrategy = getNewCollisionStrategy(getRandomStrategy(true), brickCenter);
-		CollisionStrategy secondStrategy = getNewCollisionStrategy(getRandomStrategy(true), brickCenter);
-		return new DoubleCollisionStrategy(gameObjects, object1Layer, firstStrategy, secondStrategy);
+	/**
+	 *
+	 * @return double collision strategy
+	 */
+	private CollisionStrategy createDoubleStrategy() {
+		CollisionStrategy firstStrategy = getNewCollisionStrategy(getRandomStrategy(true));
+		CollisionStrategy secondStrategy = getNewCollisionStrategy(getRandomStrategy(true));
+		return new DoubleCollisionStrategy(gameManager, object1Layer, firstStrategy, secondStrategy);
 	}
 
 	/**
@@ -141,7 +146,7 @@ public class StrategiesFactory {
 	 * @return new BasicCollisionStrategy
 	 */
 	private CollisionStrategy createBasicStrategy() {
-		return new BasicCollisionStrategy(gameObjects, object1Layer);
+		return new BasicCollisionStrategy(gameManager, object1Layer);
 	}
 
 	/**
@@ -149,8 +154,7 @@ public class StrategiesFactory {
 	 * @return new CameraCollisionStrategy
 	 */
 	private CollisionStrategy createCameraStrategy() {
-		return new CameraCollisionStrategy(
-				gameObjects, object1Layer, gameManager, windowDimensions, ballTag);
+		return new CameraCollisionStrategy(gameManager, object1Layer);
 	}
 
 	/**

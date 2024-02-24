@@ -2,11 +2,13 @@ package bricker.main;
 
 import bricker.brick_strategies.CollisionStrategy;
 import bricker.brick_strategies.StrategiesFactory;
+import bricker.brick_strategies.Strategy;
 import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
 import danogl.gui.*;
+import danogl.gui.rendering.Camera;
 import danogl.gui.rendering.RectangleRenderable;
 import danogl.gui.rendering.Renderable;
 import danogl.gui.rendering.TextRenderable;
@@ -29,9 +31,9 @@ public class BrickerGameManager extends GameManager {
 	private static final int BRICK_HEIGHT = 15;
 	private static final int DEFAULT_BRICK_ROW = 7;
 	private static final int DEFAULT_BRICK_COLUMN = 8;
-	private static final int LIFE_COUNTER_SIZE = 20;
+	private static final int HEART_SIZE = 20;
 	private static final int COUNTER_DISTANCE = 10;
-	private static final int PADDLE_DISTANCE = LIFE_COUNTER_SIZE + 3 * COUNTER_DISTANCE;
+	private static final int PADDLE_DISTANCE = HEART_SIZE + 3 * COUNTER_DISTANCE;
 	private static final int EXTRA_PADDLE_MAX_HITS = 4;
 	private static final int COLLISIONS_TO_CAMERA_RESET = 4;
 
@@ -54,7 +56,10 @@ public class BrickerGameManager extends GameManager {
 	private static final int WINDOW_Y_DIMS = 500;
 	private static final Color BORDER_COLOR = Color.BLUE;
 	private static final String MAIN_BALL_TAG = "mainBall";
+	private static final String PUCK_TAG = "puck";
+	private static final String HEART_TAG = "heart";
 	private static final int NOT_STAMPED = -1;
+	private static final float FALLING_HEART_VELOCITY = 100;
 
 	// bricks number
 	private final int brickRows;
@@ -65,13 +70,13 @@ public class BrickerGameManager extends GameManager {
 	private static ImageReader imageReader;
 	private static UserInputListener inputListener;
 	private static Sound collisionSound;
-	private static Paddle extraPaddle = null;
+	private Paddle extraPaddle = null;
 	private static final Random rand = new Random();
 	private final ArrayList<GameObject> extraObjectsList = new ArrayList<>();
 	private final Vector2 windowDimensions;
-	private Ball ball;
+	private Ball mainBall;
 	private LifeNumericCounter lifeNumericCounter;
-	private LifeHeartsCounter lifeHeartsCounter;
+	private LifeCounter lifeHeartsCounter;
 	private int lastCameraStampCounter = NOT_STAMPED;
 
 	private static final String[] MAIN_PADDLE_TAGS = {PUCK_TAG, MAIN_BALL_TAG, HEART_TAG};
@@ -128,9 +133,9 @@ public class BrickerGameManager extends GameManager {
 		addBackground(); // create background
 		addBricks();  // add Bricks
 
-		// create paddle
-		Paddle mainPaddle = createPaddle(this.windowDimensions);
-		gameObjects().addGameObject(mainPaddle);
+		// add main paddle
+		addPaddle(new Vector2(windowDimensions.x() / 2, (int) windowDimensions.y() - PADDLE_DISTANCE),
+				MAIN_PADDLE_TAGS, MAIN_PADDLE_COLLECTABLES);
 
 		// add life counters
 		addLifeNumericCounter();
@@ -161,8 +166,8 @@ public class BrickerGameManager extends GameManager {
 		if (camera() == null)
 			return;
 		if (this.lastCameraStampCounter == NOT_STAMPED)
-			this.lastCameraStampCounter = this.ball.getCollisionCounter();
-		int collisionsSinceCameraStamp = this.ball.getCollisionCounter() - this.lastCameraStampCounter;
+			this.lastCameraStampCounter = this.mainBall.getCollisionCounter();
+		int collisionsSinceCameraStamp = this.mainBall.getCollisionCounter() - this.lastCameraStampCounter;
 		if (collisionsSinceCameraStamp >= COLLISIONS_TO_CAMERA_RESET) { // reset
 			setCamera(null);
 			this.lastCameraStampCounter = NOT_STAMPED;
@@ -174,15 +179,15 @@ public class BrickerGameManager extends GameManager {
 	 * checks if one of the extra balls falls, if yes removing from game.
 	 */
 	private void checkFallingBalls() {
-		if (isBallOut(this.ball)) {  // main ball
+		if (isObjectOut(this.mainBall)) {  // main ball
 			this.lifeNumericCounter.minusLifeCount();
 			this.lifeHeartsCounter.minusLifeCount();
-			setBallToCenter(windowDimensions.mult(0.5f), ball);
+			setBallToCenter(windowDimensions.mult(0.5f), this.mainBall);
 		}
-		for (Ball ball : extraBallsList) {  // puck balls
-			if (isBallOut(ball)) {
-				gameObjects().removeGameObject(ball);
-				extraBallsList.remove(ball);
+		for (GameObject object : extraObjectsList) {  // puck balls
+			if (isObjectOut(object)) {
+				gameObjects().removeGameObject(object);
+				extraObjectsList.remove(object);
 				return;
 			}
 		}
@@ -225,14 +230,14 @@ public class BrickerGameManager extends GameManager {
 	 */
 	private void clearTableBeforeNewGame() {
 		if (extraPaddle != null) {
-			gameObjects().removeGameObject(extraPaddle);
+			removeGameObject(extraPaddle);
 		}
 		setExtraPaddle(null);
 		Brick.totalNumberOfBricks = 0;
-		for (Ball ball : extraBallsList) {
-			gameObjects().removeGameObject(ball);
+		for (GameObject object : extraObjectsList) {
+			removeGameObject(object);
 		}
-		extraBallsList.clear();
+		extraObjectsList.clear();
 	}
 
 	//  ### general public methods ###
@@ -346,7 +351,32 @@ public class BrickerGameManager extends GameManager {
 		return BALL_SPEED;
 	}
 
-	public static Paddle createPaddle(Vector2 windowDimensions) {
+	/**
+	 * focusing camera on ball
+	 */
+	public void focusCameraOnBall() {
+		setCamera(new Camera(
+				this.mainBall, Vector2.ZERO, windowDimensions.mult(1.2f), windowDimensions));
+	}
+
+	/**
+	 * getter for main ball tag field
+	 * @return String of main ball tag
+	 */
+	public String getMainBallTag () {
+		return MAIN_BALL_TAG;
+	}
+
+	// ### paddle methods ###
+
+	/**
+	 * creating and adding paddle to gameobjectes.
+	 * @param center the wanted location of the center of the paddle
+	 * @param collisionTags list of objects tags which paddle should collide with
+	 * @param collectableTags  list of objects tags which paddle can collect
+	 * @return Paddle
+	 */
+	public Paddle addPaddle(Vector2 center, String[] collisionTags, String[] collectableTags) {
 		Renderable paddleImage = imageReader.readImage(
 				PADDLE_IMG_PATH, true);
 		Paddle paddle = new Paddle(
@@ -391,7 +421,7 @@ public class BrickerGameManager extends GameManager {
 	 */
 	private void checkRemoveExtraPaddle() {
 		if (extraPaddle != null && extraPaddle.getCollisionCounter() >= EXTRA_PADDLE_MAX_HITS) {
-			gameObjects().removeGameObject(extraPaddle);
+			removeGameObject(extraPaddle);
 			setExtraPaddle(null);
 		}
 	}
@@ -414,9 +444,9 @@ public class BrickerGameManager extends GameManager {
 				Vector2.ZERO,
 				new Vector2((int) windowDimensions.x(), BORDER_WIDTH),
 				new RectangleRenderable(BORDER_COLOR));
-		gameObjects().addGameObject(border_right);
-		gameObjects().addGameObject(border_left);
-		gameObjects().addGameObject(border_up);
+		addGameObject(border_right);
+		addGameObject(border_left);
+		addGameObject(border_up);
 	}
 
 	/**
@@ -429,7 +459,7 @@ public class BrickerGameManager extends GameManager {
 				Vector2.ZERO,
 				new Vector2((int) windowDimensions.x(), (int) windowDimensions.y()),
 				backgroundImage);
-		gameObjects().addGameObject(background, Layer.BACKGROUND);
+		addGameObject(background, Layer.BACKGROUND);
 	}
 
 	/**
@@ -437,11 +467,10 @@ public class BrickerGameManager extends GameManager {
 	 * also generating strategies factory and randomly choose for each brick it's strategy.
 	 */
 	private void addBricks() {
-		StrategiesFactory strategiesFactory = new StrategiesFactory(
-				(int) (0.75 * BALL_RADIUS), windowDimensions, gameObjects(), BRICK_LAYER,
-				imageReader, this, MAIN_BALL_TAG);
-		Renderable brickImage = imageReader.readImage(
-				BRICK_IMG_PATH, false);
+		StrategiesFactory strategiesFactory = new StrategiesFactory (
+				this, BRICK_LAYER); // creating strategies factory
+		Renderable brickImage = readImage(
+				BRICK_IMG_PATH, false); // reading brick image
 		float brickWidth =
 				((windowDimensions.x() - (2 * BORDER_WIDTH) - this.brickColumns - 2) / this.brickColumns); // calculating brick width
 		Vector2 brickDimensions = new Vector2(brickWidth, BRICK_HEIGHT); // final brick dimensions
@@ -471,34 +500,72 @@ public class BrickerGameManager extends GameManager {
 		TextRenderable counterRenderable = new TextRenderable("0");
 		this.lifeNumericCounter = new LifeNumericCounter(
 				new Vector2(BORDER_WIDTH + COUNTER_DISTANCE,
-						(int) windowDimensions.y() - LIFE_COUNTER_SIZE - COUNTER_DISTANCE),
-				new Vector2(LIFE_COUNTER_SIZE, LIFE_COUNTER_SIZE),
+						(int) windowDimensions.y() - HEART_SIZE - COUNTER_DISTANCE),
+				new Vector2(HEART_SIZE, HEART_SIZE),
 				counterRenderable
 		);
-		gameObjects().addGameObject(this.lifeNumericCounter, LIFE_COUNTER_LAYER);
+		addGameObject(this.lifeNumericCounter, LIFE_COUNTER_LAYER);
 	}
 
-	private void addLifeHeartsCounter() {
+	/**
+	 * adding a single heart image to game
+	 * @param topLeftCorner heart location
+	 * @param layer the layer of adding the heart
+	 * @return heart
+	 */
+	public Heart createHeart(Vector2 topLeftCorner, int layer, CollisionStrategy collisionStrategy) {
 		Renderable heartImage = imageReader.readImage(
 				HEART_IMG_PATH, true);
+		Heart heart = new Heart(topLeftCorner,
+				new Vector2(HEART_SIZE, HEART_SIZE),
+				heartImage, collisionStrategy);
+		heart.setTag(HEART_TAG);
+		addGameObject(heart, layer);
+		return heart;
+	}
+
+	/**
+	 * adding falling heart to game
+	 * @param center location center
+	 */
+	public void addFallingHeart(Vector2 center) {
+		StrategiesFactory strategiesFactory = new StrategiesFactory (
+				this, Layer.DEFAULT);
+		CollisionStrategy basicStrategy = strategiesFactory.buildStrategy(Strategy.BASIC);
+		Heart heart = createHeart(center, Layer.DEFAULT, basicStrategy);
+		heart.setCenter(center);
+		heart.setVelocity(Vector2.DOWN.mult(FALLING_HEART_VELOCITY));
+		addToExtraObjectsList(heart);
+	}
+
+	/**
+	 * adding life counter presented by heart renderable
+	 */
+	private void addLifeHeartsCounter() {
 		int maxLife = this.lifeNumericCounter.getMaxLife();
 		int lifeCount = this.lifeNumericCounter.getLifeCount();
 		this.lifeHeartsCounter = new LifeHeartsCounter(
-				gameObjects(), LIFE_COUNTER_LAYER,
-				new Vector2(BORDER_WIDTH + 2 * COUNTER_DISTANCE + LIFE_COUNTER_SIZE,
-						(int) windowDimensions.y() - LIFE_COUNTER_SIZE - COUNTER_DISTANCE),
-				LIFE_COUNTER_SIZE, heartImage, maxLife, lifeCount
+				this, LIFE_COUNTER_LAYER,
+				new Vector2(BORDER_WIDTH + 2 * COUNTER_DISTANCE + HEART_SIZE,
+						(int) windowDimensions.y() - HEART_SIZE - COUNTER_DISTANCE),
+				HEART_SIZE, maxLife, lifeCount
 		);
-		//		gameObjects().addGameObject(this.lifeHeartsCounter, LIFE_COUNTER_LAYER);
-
 	}
+
+	/**
+	 * getter for heart tag
+	 * @return Heart's tag
+	 */
+	public String getHeartTag() {
+		return HEART_TAG;
+	}
+
 
 
 	public static void main(String[] args) {
 		GameManager gameManager = new BrickerGameManager(
 				WINDOW_TITLE,
 				new Vector2(WINDOW_X_DIMS, WINDOW_Y_DIMS));
-		// TODO change numbers
 		gameManager.run();
 	}
 }

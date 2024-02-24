@@ -32,11 +32,15 @@ public class Paddle extends GameObject {
 	 */
 	public Paddle(Vector2 topLeftCorner, Vector2 dimensions,
 				  Renderable renderable, UserInputListener inputListener, Vector2 windowDimensions,
-                  int bordersWidth) {
+                  int bordersWidth, String[] collisionTags, String[] collectableTags) {
 		super(topLeftCorner, dimensions, renderable);
 		this.inputListener = inputListener;
 		this.windowDimensions = windowDimensions;
 		this.bordersWidth = bordersWidth;
+		if (collisionTags != null)
+			Collections.addAll(this.collisionTagsList, collisionTags);
+		if (collectableTags != null)
+			Collections.addAll(this.collectableTagsList, collectableTags);
 	}
 
 	/**
@@ -74,14 +78,26 @@ public class Paddle extends GameObject {
 	 */
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
-		super.onCollisionEnter(other, collision);
-		if (other instanceof Ball) {
-			// TODO: maybe instanceof is bad, and we can use shouldCollide
-			collisionCounter++;
-		}
-
+		collisionCounter++;
 	}
 
+	/**
+	 * checks if the given object should collide with the paddle
+	 * @param other The other GameObject.
+	 * @return true/false
+	 */
+	@Override
+	public boolean shouldCollideWith(GameObject other) {
+		if (collisionTagsList.contains(other.getTag()))
+			return true;
+		return false;
+	}
+
+
+	/**
+	 *
+	 * @return collisionCounter
+	 */
 	public int getCollisionCounter() {
 		return collisionCounter;
 	}

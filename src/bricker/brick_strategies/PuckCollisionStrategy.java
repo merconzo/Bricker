@@ -6,8 +6,6 @@ package bricker.brick_strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
-import danogl.collisions.GameObjectCollection;
-import danogl.gui.ImageReader;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
@@ -35,7 +33,7 @@ public class PuckCollisionStrategy extends BasicCollisionStrategy {
     @Override
     public void onCollision(GameObject object1, GameObject object2) {
         super.onCollision(object1, object2);
-        addPucks();
+        addPucks(object1.getCenter());
     }
 
     /**
