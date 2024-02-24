@@ -10,6 +10,7 @@ import danogl.collisions.GameObjectCollection;
 public class BasicCollisionStrategy implements CollisionStrategy {
     protected GameObjectCollection gameObjects;
     protected int object1Layer;
+
     /**
      * Constructs a BasicCollisionStrategy with the given parameters.
      *

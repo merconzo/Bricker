@@ -87,6 +87,10 @@ public class StrategiesFactory {
 				brickCenter);
 	}
 
+	/**
+	 *
+	 * @return new PaddleCollisionStrateg
+	 */
 	private CollisionStrategy createPaddleStrategy() {
 		return new PaddleCollisionStrategy(gameObjects,
 				object1Layer, windowDimensions);
@@ -99,6 +103,11 @@ public class StrategiesFactory {
 		return new DoubleCollisionStrategy(gameObjects, object1Layer, firstStrategy, secondStrategy);
 	}
 
+	/**
+	 * gets a random strategy from strategy enum
+	 * @param isSpecial boolean representing if we would like a special strategy
+	 * @return strategy enum
+	 */
 	private Strategy getRandomStrategy(boolean isSpecial) {
 		List<Strategy> strategies = generateStrategiesToPick(isSpecial);
 		int ind = rand.nextInt(strategies.size());
@@ -108,6 +117,11 @@ public class StrategiesFactory {
 		return chosen;
 	}
 
+	/**
+	 * generating a list which each strategy enum appears in it couple of times following it propability.
+	 * @param isSpecial true if wanted to create only special list
+	 * @return strategy list
+	 */
 	private List<Strategy> generateStrategiesToPick(boolean isSpecial) {
 		List<Strategy> strategies = new ArrayList<>();
 		for(Strategy strategy: Strategy.values()) {
@@ -122,16 +136,26 @@ public class StrategiesFactory {
 		return strategies;
 	}
 
-
+	/**
+	 *
+	 * @return new BasicCollisionStrategy
+	 */
 	private CollisionStrategy createBasicStrategy() {
 		return new BasicCollisionStrategy(gameObjects, object1Layer);
 	}
 
+	/**
+	 *
+	 * @return new CameraCollisionStrategy
+	 */
 	private CollisionStrategy createCameraStrategy() {
 		return new CameraCollisionStrategy(
 				gameObjects, object1Layer, gameManager, windowDimensions, ballTag);
 	}
 
+	/**
+	 * resets the counter
+	 */
 	public void resetCounter() {
 		this.doublesCounter.reset();
 	}

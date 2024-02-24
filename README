@@ -4,18 +4,17 @@ meyrav.ganuz, talraiter
 ANSWERS:
 1. for 1.7 we chose to use the first option.
     pros:
-    - simplicity: this option is simpler since we don't need to add public methods to th BrickerGameManager.
-    - separation: we kept the collision strategy outside of the game managment.
-    - Flexible: the code this way can be reusable with all object types and all game layers.
+    - encapsulation: keeps the responsability of adding and deleting objects to one class.
+    - information hiding: only public methods can affect the game object collection.
     cons:
-    - encapsulation issue: Exposing too much detail about game objects to the CollisionStrategy classes,
-      which can lead to unintended effects.
+    - Flexiblity: the code depends on the brickergame manager.
 2.
 API CHANGES:
 Brick -
-- brickLayer - it's important to implement in the constructor the Layer that brick going to be in to send it to
- the collision strategy in case we would like to delete it.
 - totalNumberOfBricks - allows to follow the current number of bricks in the game.
+
+3.
+
 
 
 

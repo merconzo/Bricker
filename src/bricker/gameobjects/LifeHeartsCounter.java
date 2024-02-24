@@ -5,7 +5,9 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 import static java.lang.Math.max;
-
+/**
+ * Represents a life counter using hearts img.
+ */
 public class LifeHeartsCounter implements LifeCounter {
 
 	private static final int SPACE_BETWEEN_HEARTS = 10;
@@ -36,7 +38,11 @@ public class LifeHeartsCounter implements LifeCounter {
 		setLifeCount(initLifeCount);
 
 	}
-
+	/**
+	 * Sets the life count to the specified value and updates the visibility of hearts accordingly.
+	 *
+	 * @param lifeCount The new life count.
+	 */
 	public void setLifeCount(int lifeCount) {
 		if (lifeCount < 0 || lifeCount > maxLife)
 			return;
@@ -48,14 +54,18 @@ public class LifeHeartsCounter implements LifeCounter {
 			this.hearts[i].setVisibility(false);
 		}
 	}
-
+	/**
+	 * Decreases the life count by one and updates the visibility of the corresponding heart.
+	 */
 	public void minusLifeCount() {
 		if (this.lifeCount == 0)
 			return;
 		this.lifeCount--;
 		this.hearts[lifeCount].setVisibility(false);
 	}
-
+	/**
+	 * Increases the life count by one and updates the visibility of the corresponding heart.
+	 */
 	public void plusLifeCount() {
 		if (this.lifeCount == this.maxLife)
 			return;

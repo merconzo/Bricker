@@ -26,6 +26,13 @@ public class Ball extends GameObject {
 //        this.setTag(BALL_TAG);
     }
 
+    /**
+     *
+     * @param other The GameObject with which a collision occurred.
+     * @param collision Collision
+     * on collision enter flipping the ball direction, playing collision sound, counting the collision.
+     *
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
@@ -35,6 +42,10 @@ public class Ball extends GameObject {
         collisionCounter++;
     }
 
+    /**
+     *
+     * @return collision counter
+     */
     public int getCollisionCounter() {
         return collisionCounter;
     }

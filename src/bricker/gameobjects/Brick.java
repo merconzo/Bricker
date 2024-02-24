@@ -33,9 +33,13 @@ public class Brick extends GameObject {
         totalNumberOfBricks++;
     }
 
-    public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
-        this.collisionStrategy = collisionStrategy;
-    }
+//    /**
+//     * setter for collision strategy
+//     * @param collisionStrategy
+//     */
+//    public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
+//        this.collisionStrategy = collisionStrategy;
+//    }
 
     /**
      * Method called when a collision occurs with this brick.

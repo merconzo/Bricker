@@ -7,12 +7,16 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 
 public class Paddle extends GameObject {
 	private static final float MOVEMENT_SPEED = 500;
 	private final UserInputListener inputListener;
 	private final Vector2 windowDimensions;
 	private final int bordersWidth;
+	private final ArrayList<String> collisionTagsList = new ArrayList<>();
+	private final ArrayList<String> collectableTagsList = new ArrayList<>(); // TODO delete
 
 	private int collisionCounter = 0;
 
@@ -35,6 +39,10 @@ public class Paddle extends GameObject {
 		this.bordersWidth = bordersWidth;
 	}
 
+	/**
+	 * updating the padlle location du to input listener and borders location.
+	 * @param deltaTime The time elapsed, in seconds, since the last frame.
+	 */
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
@@ -59,6 +67,11 @@ public class Paddle extends GameObject {
 		}
 	}
 
+	/**
+	 * counting collision while enter
+	 * @param other The GameObject with which a collision occurred.
+	 * @param collision Information regarding this collision.
+	 */
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
 		super.onCollisionEnter(other, collision);
@@ -73,7 +86,5 @@ public class Paddle extends GameObject {
 		return collisionCounter;
 	}
 
-	public void setCollisionCounter(int collisionCounter) {
-		this.collisionCounter = collisionCounter;
-	}
+
 }
