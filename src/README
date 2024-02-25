@@ -20,6 +20,7 @@ ANSWERS:
         The LifeHeartsCounter gets an instance of BrickerGameManager, and uses it to add the Heart objects to
         the GUI layer of the game.
         Practically, the counter controls the visibility of the hearts according to the current life points.
+    Both of the counters ensures the ratio 1 <= initLifeCount <= maxLife (in case wrong input received).
 
     Adding the counters to the game:
     BrickerGameManager creates an instance of LifeNumericCounter and adds it to the game, with the
