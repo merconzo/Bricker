@@ -2,18 +2,36 @@ meyrav.ganuz, talraiter
 208932830, 208997908
 
 ANSWERS:
-1. for 1.7 we chose to use the first option.
-    pros:
-    - encapsulation: keeps the responsability of adding and deleting objects to one class.
-    - information hiding: only public methods can affect the game object collection.
-    cons:
+1. For part 1.7 we chose to use the second option - we passed an instance of BrickerGameManager to the
+    collision strategies.
+    Pros:
+    - Encapsulation: keeps the responsability of adding and deleting objects to one class.
+    - Information hiding: only public methods can affect the game object collection.
+    Cons:
     - Flexiblity: the code depends on the brickergame manager.
-2.
-API CHANGES:
-Brick -
-- totalNumberOfBricks - allows to follow the current number of bricks in the game.
+2. Part 1.8 - the implementation of the life counters:
+    We created 3 classes:
+    a) LifeCounter interface: indicates the API of a life counter (add/remove/set/get life points)
+    b) LifeNumericCounter: a game object that implements the LifeCounter interface.
+        This is a text renderable that shows the current life points.
+        The BrickerGameManager creates an instance of it and adds it to the game.
+    c) LifeHeartsCounter: implements the LifeCounter interface.
+        This is a class that creates an array of heart objects, when each heart represents a life point.
+        The LifeHeartsCounter gets an instance of BrickerGameManager, and uses it to add the Heart objects to
+        the GUI layer of the game.
+        Practically, the counter controls the visibility of the hearts according to the current life points.
 
-3.
+    The BrickerGameManager adds the LifeNumericCounter, then uses it's values to create the LifeHeartsCounter
+    (so the numbers will be synchronized).
+    Finally, to control the counters, the game manager uses the LifeCounter API of the counters. Their are 2
+    public functions in the manager (plusLife(), minusLife()) that controls both of the counters together.
+3. SPECIAL STRATEGIES:
+
+4. DOUBLE STRATEGY:
+
+5. API CHANGES in part 2:
+    Brick:
+    - totalNumberOfBricks - allows to follow the current number of bricks in the game.
 
 
 

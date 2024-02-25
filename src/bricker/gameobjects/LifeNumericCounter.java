@@ -8,7 +8,8 @@ import java.awt.*;
 
 import static java.lang.Math.max;
 /**
- * Represents a numeric life counter displayed as text.
+ * Represents a numeric life counter, displayed as text.
+ * This is a game object that can be added to the game.
  */
 public class LifeNumericCounter extends GameObject implements LifeCounter {
 	private static final int MAX_LIFE = 4;
