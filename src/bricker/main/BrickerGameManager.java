@@ -44,7 +44,6 @@ public class BrickerGameManager extends GameManager {
 	private static final int BRICK_LAYER = Layer.STATIC_OBJECTS;
 	private static final int LIFE_COUNTER_LAYER = Layer.UI;
 
-
 	// assets paths
 	private static final String BALL_IMG_PATH = "assets/ball.png";
 	private static final String PUCK_IMG_PATH = "assets/mockBall.png";
@@ -65,6 +64,7 @@ public class BrickerGameManager extends GameManager {
 	private static final String HEART_TAG = "heart";
 	private static final int NOT_STAMPED = -1;
 	private static final float FALLING_HEART_VELOCITY = 100;
+
 	// collisions tags
 	private static final String[] MAIN_PADDLE_TAGS = {PUCK_TAG, MAIN_BALL_TAG, HEART_TAG};
 	private static final String[] EXTRA_PADDLE_TAGS = {PUCK_TAG, MAIN_BALL_TAG};
@@ -87,7 +87,6 @@ public class BrickerGameManager extends GameManager {
 	private LifeNumericCounter lifeNumericCounter;
 	private LifeCounter lifeHeartsCounter;
 	private int lastCameraStampCounter = NOT_STAMPED;
-
 
 
 	/**

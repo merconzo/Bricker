@@ -3,10 +3,9 @@ package bricker.gameobjects;
 import danogl.GameObject;
 import danogl.gui.rendering.TextRenderable;
 import danogl.util.Vector2;
-
 import java.awt.*;
-
 import static java.lang.Math.max;
+
 /**
  * Represents a numeric life counter, displayed as text.
  * This is a game object that can be added to the game.
@@ -15,10 +14,10 @@ public class LifeNumericCounter extends GameObject implements LifeCounter {
 	private static final int MAX_LIFE = 4;
 	private static final int INIT_LIFE = 3;
 	private static final Color DEFAULT_COLOR = Color.GREEN;
-
 	private final TextRenderable renderable;
 	private final int maxLife;
 	private int lifeCount;
+
 	/**
 	 * Constructs a LifeNumericCounter with default initial and maximum life counts.
 	 *
@@ -46,6 +45,7 @@ public class LifeNumericCounter extends GameObject implements LifeCounter {
 		this.maxLife = max(maxLife, this.lifeCount);  // lifeCount <= maxLife
 		render();
 	}
+
 	/**
 	 * Retrieves the current life count.
 	 *
@@ -75,6 +75,7 @@ public class LifeNumericCounter extends GameObject implements LifeCounter {
 		this.lifeCount = lifeCount;
 		render();
 	}
+
 	/**
 	 * Decreases the life count by one.
 	 */
@@ -84,6 +85,7 @@ public class LifeNumericCounter extends GameObject implements LifeCounter {
 		this.lifeCount--;
 		render();
 	}
+
 	/**
 	 * Increases the life count by one.
 	 */
@@ -93,6 +95,7 @@ public class LifeNumericCounter extends GameObject implements LifeCounter {
 		this.lifeCount++;
 		render();
 	}
+
 	/**
 	 * Renders the current life count.
 	 */
@@ -100,6 +103,7 @@ public class LifeNumericCounter extends GameObject implements LifeCounter {
 		updateColor();
 		updateRenderNumber();
 	}
+
 	/**
 	 * Updates the color of the text based on the current life count.
 	 */
@@ -113,6 +117,7 @@ public class LifeNumericCounter extends GameObject implements LifeCounter {
 			color = DEFAULT_COLOR;
 		this.renderable.setColor(color);
 	}
+
 	/**
 	 * Updates the text to display the current life count.
 	 */
