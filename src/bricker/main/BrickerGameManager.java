@@ -7,6 +7,7 @@ import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
 import danogl.collisions.Layer;
+import danogl.components.CoordinateSpace;
 import danogl.gui.*;
 import danogl.gui.rendering.Camera;
 import danogl.gui.rendering.RectangleRenderable;
@@ -382,6 +383,7 @@ public class BrickerGameManager extends GameManager {
 	public void focusCameraOnBall() {
 		setCamera(new Camera(
 				this.mainBall, Vector2.ZERO, windowDimensions.mult(1.2f), windowDimensions));
+
 	}
 
 	/**
@@ -480,6 +482,7 @@ public class BrickerGameManager extends GameManager {
 				new Vector2((int) windowDimensions.x(), (int) windowDimensions.y()),
 				backgroundImage);
 		addGameObject(background, Layer.BACKGROUND);
+		background.setCoordinateSpace(CoordinateSpace.CAMERA_COORDINATES);
 	}
 
 	/**
