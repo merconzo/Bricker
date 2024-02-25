@@ -13,7 +13,7 @@ public enum Strategy {
 
 	private final double probability; //represents the strategy probability to be chosen by brick
 
-	private Strategy(double probability) {
+	Strategy(double probability) {
 		this.probability = probability;
 	}
 

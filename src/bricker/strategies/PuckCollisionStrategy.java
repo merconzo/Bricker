@@ -6,7 +6,6 @@ package bricker.strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
-import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 public class PuckCollisionStrategy extends BasicCollisionStrategy {
