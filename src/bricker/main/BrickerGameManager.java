@@ -1,8 +1,8 @@
 package bricker.main;
 
-import bricker.strategies.CollisionStrategy;
-import bricker.strategies.StrategiesFactory;
-import bricker.strategies.Strategy;
+import bricker.brick_strategies.CollisionStrategy;
+import bricker.brick_strategies.StrategiesFactory;
+import bricker.brick_strategies.Strategy;
 import bricker.gameobjects.*;
 import danogl.GameManager;
 import danogl.GameObject;
@@ -19,6 +19,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * game manager of bricker game.
+ */
 public class BrickerGameManager extends GameManager {
 
 	// sizes
@@ -223,7 +226,8 @@ public class BrickerGameManager extends GameManager {
 	}
 
 	/**
-	 * checks if game ended and if yes sets the win/lose situation and opens a dialog if player wants to play again.
+	 * checks if game ended and if yes sets the win/lose situation and opens a dialog
+	 * if player wants to play again.
 	 * if play again "yes" pressed - clears table and restarting game.
 	 */
 	private void checkGameEnd() {  // TODO change to prsf
@@ -481,21 +485,24 @@ public class BrickerGameManager extends GameManager {
 
 	/**
 	 * Method to create bricks and add them to the game.
-	 * also generating strategies factory and randomly choose for each brick it's strategy.
+	 * also generating brick_strategies factory and randomly choose for each brick it's strategy.
 	 */
 	private void addBricks() {
 		StrategiesFactory strategiesFactory = new StrategiesFactory (
-				this, BRICK_LAYER); // creating strategies factory
+				this, BRICK_LAYER); // creating brick_strategies factory
 		Renderable brickImage = readImage(
 				BRICK_IMG_PATH, false); // reading brick image
 		float brickWidth =
-				((windowDimensions.x() - (2 * BORDER_WIDTH) - this.brickColumns - 2) / this.brickColumns); // calculating brick width
+				((windowDimensions.x() - (2 * BORDER_WIDTH) - this.brickColumns - 2) /
+						this.brickColumns); // calculating brick width
 		Vector2 brickDimensions = new Vector2(brickWidth, BRICK_HEIGHT); // final brick dimensions
 		for (int i = 0; i < this.brickRows; i++) {
 			float brickLeftY = BRICK_HEIGHT * i + BORDER_WIDTH + (3 * i); // calculating brick height
 			for (int j = 0; j < this.brickColumns; j++) {
-				Vector2 topLeftCorner = new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY); //brick location
-				CollisionStrategy brickStrategy = strategiesFactory.buildRandomStrategy(); //choosing collision strategy
+				Vector2 topLeftCorner =
+						new Vector2(j * brickWidth + BORDER_WIDTH + j + 2, brickLeftY); //brick location
+				CollisionStrategy brickStrategy =
+						strategiesFactory.buildRandomStrategy(); //choosing collision strategy
 				Brick brick = new Brick(
 						topLeftCorner, brickDimensions,
 						brickImage, brickStrategy); //creating brick
@@ -567,9 +574,13 @@ public class BrickerGameManager extends GameManager {
 				new Vector2(BORDER_WIDTH + 2 * COUNTER_DISTANCE + HEART_SIZE,
 						(int) windowDimensions.y() - HEART_SIZE - COUNTER_DISTANCE),
 				HEART_SIZE, maxLife, lifeCount
-		);
+		); // creating new life heart counter
 	}
 
+	/**
+	 * the main class which run the game
+	 * @param args args
+	 */
 	public static void main(String[] args) {
 		GameManager gameManager = new BrickerGameManager(
 				WINDOW_TITLE,

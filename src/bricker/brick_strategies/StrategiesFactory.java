@@ -1,4 +1,4 @@
-package bricker.strategies;
+package bricker.brick_strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.util.Counter;
@@ -7,6 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * factory for collision strategies
+ */
 public class StrategiesFactory {
 	//assets
 
@@ -21,7 +24,7 @@ public class StrategiesFactory {
 	private final int object1Layer;
 
 	/**
-	 * constructor of strategies factory.
+	 * constructor of brick_strategies factory.
 	 * @param gameManager bricker game manager
 	 * @param object1Layer layer of object1
 	 */

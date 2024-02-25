@@ -3,11 +3,14 @@
  * while collision occurs wth object 1, the camera follows the man ball.
  * It implements the CollisionStrategy interface.
  */
-package bricker.strategies;
+package bricker.brick_strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 
+/**
+ * representing collision strategy which focus the camera on main ball.
+ */
 public class CameraCollisionStrategy extends BasicCollisionStrategy {
 	private final BrickerGameManager gameManager;
 

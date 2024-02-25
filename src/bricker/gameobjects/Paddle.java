@@ -10,6 +10,9 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * representing paddle game object
+ */
 public class Paddle extends GameObject {
 	private static final float MOVEMENT_SPEED = 500;
 	private final UserInputListener inputListener;

@@ -6,6 +6,9 @@ import danogl.gui.Sound;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+/**
+ * class represents a Ball object
+ */
 public class Ball extends GameObject {
 //    private static final String BALL_TAG = "ball";
     private final Sound collisionSound;

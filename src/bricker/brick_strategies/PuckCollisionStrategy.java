@@ -1,13 +1,17 @@
 /**
-* PuckCollisionStrategy represents a collision strategy that putting extra 2 Balls (named pucks) objects in the game.
+* PuckCollisionStrategy represents a collision strategy
+* that putting extra 2 Balls (named pucks) objects in the game.
 * It extends BasicCollisionStrategy and handles collisions involving puck objects.
  */
-package bricker.strategies;
+package bricker.brick_strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 import danogl.util.Vector2;
 
+/**
+ * representing collision strategy which adds 2 puck balls to game
+ */
 public class PuckCollisionStrategy extends BasicCollisionStrategy {
 
     private static final int PUCKS_COUNT = 2;

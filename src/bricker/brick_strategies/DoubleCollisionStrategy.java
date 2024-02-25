@@ -1,11 +1,13 @@
-package bricker.strategies;
+package bricker.brick_strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 
 /**
- * DoubleCollisionStrategy class represents a collision strategy that combines two different special collision strategies.
- * It extends BasicCollisionStrategy and overrides the onCollision method to merge the onCollision method of both
+ * DoubleCollisionStrategy class represents a collision strategy
+ * that combines two different special collision brick_strategies.
+ * It extends BasicCollisionStrategy and overrides the
+ * onCollision method to merge the onCollision method of both
  * collisions
  */
 public class DoubleCollisionStrategy extends BasicCollisionStrategy {

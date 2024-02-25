@@ -1,12 +1,16 @@
 /**
- * PaddleCollisionStrategy represents a collision strategy that adds an extra paddle to the game upon collision.
+ * PaddleCollisionStrategy represents a collision strategy
+ * that adds an extra paddle to the game upon collision.
  * It extends BasicCollisionStrategy.
  */
-package bricker.strategies;
+package bricker.brick_strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;
 
+/**
+ * representing collision strategy which ads paddle
+ */
 public class PaddleCollisionStrategy extends BasicCollisionStrategy {
 
     /**

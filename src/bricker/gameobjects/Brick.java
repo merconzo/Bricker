@@ -1,11 +1,14 @@
 package bricker.gameobjects;
 
-import bricker.strategies.CollisionStrategy;
+import bricker.brick_strategies.CollisionStrategy;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+/**
+ * represents brick object
+ */
 public class Brick extends GameObject {
 
     /**

@@ -1,6 +1,6 @@
 package bricker.gameobjects;
 
-import bricker.strategies.CollisionStrategy;
+import bricker.brick_strategies.CollisionStrategy;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
@@ -9,6 +9,9 @@ import danogl.util.Vector2;
 import java.util.ArrayList;
 import java.util.Collections;
 
+/**
+ * represents a heart game object
+ */
 public class Heart extends GameObject {
 	private final Renderable image;
 	private final CollisionStrategy collisionStrategy;
