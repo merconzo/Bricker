@@ -19,7 +19,6 @@ public class Paddle extends GameObject {
 	private final Vector2 windowDimensions;
 	private final int bordersWidth;
 	private final ArrayList<String> collisionTagsList = new ArrayList<>();
-
 	private int collisionCounter = 0;
 
 	/**

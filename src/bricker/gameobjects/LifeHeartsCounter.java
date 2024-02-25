@@ -5,7 +5,7 @@ import danogl.util.Vector2;
 
 import static java.lang.Math.max;
 /**
- * Represents a life counter using hearts img: each heart is a life point.
+ * Represents a graphic life counter using hearts images: each heart is a life point.
  */
 public class LifeHeartsCounter implements LifeCounter {
 

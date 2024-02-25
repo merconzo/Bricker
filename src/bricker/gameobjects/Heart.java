@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * represents a heart game object
+ * represents a heart image game object
  */
 public class Heart extends GameObject {
 	private final Renderable image;

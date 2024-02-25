@@ -15,7 +15,6 @@ public class Brick extends GameObject {
      * totalNumberOfBricks
      */
     static public int totalNumberOfBricks = 0;
-
     private final CollisionStrategy collisionStrategy;
 
 
@@ -43,8 +42,8 @@ public class Brick extends GameObject {
      */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
-        totalNumberOfBricks--;
         super.onCollisionEnter(other, collision);
+        totalNumberOfBricks--;
         this.collisionStrategy.onCollision(this, other);
     }
 

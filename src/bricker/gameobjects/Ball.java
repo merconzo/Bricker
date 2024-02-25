@@ -10,7 +10,6 @@ import danogl.util.Vector2;
  * class represents a Ball object
  */
 public class Ball extends GameObject {
-//    private static final String BALL_TAG = "ball";
     private final Sound collisionSound;
     private int collisionCounter = 0;
 
@@ -26,7 +25,6 @@ public class Ball extends GameObject {
                     Sound collisionSound) {
         super(topLeftCorner, dimensions, renderable);
         this.collisionSound = collisionSound;
-//        this.setTag(BALL_TAG);
     }
 
     /**
