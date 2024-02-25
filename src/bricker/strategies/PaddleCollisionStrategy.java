@@ -27,10 +27,7 @@ public class PaddleCollisionStrategy extends BasicCollisionStrategy {
     @Override
     public void onCollision(GameObject object1, GameObject object2) {
         super.onCollision(object1, object2);
-        // Check if an extra paddle already exists
-        if (super.gameManager.getExtraPaddle() == null) {
-            super.gameManager.addExtraPaddle();
-        }
+        super.gameManager.addExtraPaddle();
     }
 
 

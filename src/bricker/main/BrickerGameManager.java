@@ -44,6 +44,7 @@ public class BrickerGameManager extends GameManager {
 
 	// assets paths
 	private static final String BALL_IMG_PATH = "assets/ball.png";
+	private static final String PUCK_IMG_PATH = "assets/mockBall.png";
 	private static final String COLLISION_SOUND_PATH = "assets/blop_cut_silenced.wav";
 	private static final String PADDLE_IMG_PATH = "assets/paddle.png";
 	private static final String BACKGROUND_IMG_PATH = "assets/DARK_BG2_small.jpeg";
@@ -140,7 +141,7 @@ public class BrickerGameManager extends GameManager {
 		Paddle mainPaddle = addPaddle(
 				new Vector2(windowDimensions.x() / 2,
 				(int) windowDimensions.y() - PADDLE_DISTANCE),
-				MAIN_PADDLE_TAGS, MAIN_PADDLE_COLLECTABLES);
+				MAIN_PADDLE_TAGS);
 		mainPaddle.setTag(MAIN_PADDLE_TAG);
 
 		// add life counters
@@ -199,11 +200,17 @@ public class BrickerGameManager extends GameManager {
 			System.out.println(extraObjectsList.size());
 	}
 
+	/**
+	 * minus life to the player
+	 */
 	public void minusLife() {
 		this.lifeNumericCounter.minusLifeCount();
 		this.lifeHeartsCounter.minusLifeCount();
 	}
 
+	/**
+	 * plus life to the player
+	 */
 	public void plusLife() {
 		this.lifeNumericCounter.plusLifeCount();
 		this.lifeHeartsCounter.plusLifeCount();
@@ -300,7 +307,7 @@ public class BrickerGameManager extends GameManager {
 	 * @param isTopLeftPixelTransparency boolean
 	 * @return Rendarable of given image
 	 */
-	public Renderable readImage(String imagePath, boolean isTopLeftPixelTransparency){
+	private Renderable readImage(String imagePath, boolean isTopLeftPixelTransparency){
 		return imageReader.readImage(imagePath, isTopLeftPixelTransparency);
 	}
 
@@ -322,7 +329,7 @@ public class BrickerGameManager extends GameManager {
 	 * @param center the center to set the ball at
 	 * @return the ball
 	 */
-	public Ball addBall(Renderable ballImage, int ballRadius, Vector2 center) {
+	private Ball addBall(Renderable ballImage, int ballRadius, Vector2 center) {
 		Ball ball = new Ball(
 				Vector2.ZERO, new Vector2(ballRadius, ballRadius), ballImage, collisionSound);
 		setBallToCenter(center, ball);
@@ -332,11 +339,12 @@ public class BrickerGameManager extends GameManager {
 
 	/**
 	 * adding the pucks ball
-	 * @param ballImage Renderable of puck balls
+	 *
 	 * @param center the center where puck ball is set (usually brick center)
 	 */
-	public void addPuckBalls(Renderable ballImage, Vector2 center){
-		Ball puck = addBall(ballImage, (int)PUCK_BALL_RADIUS, center);
+	public void addPuckBalls(Vector2 center){
+		Renderable puckImg = readImage(PUCK_IMG_PATH, true);
+		Ball puck = addBall(puckImg, (int)PUCK_BALL_RADIUS, center);
 		puck.setTag(PUCK_TAG);
 		addToExtraObjectsList(puck);
 	}
@@ -388,12 +396,12 @@ public class BrickerGameManager extends GameManager {
 
 	/**
 	 * creating and adding paddle to gameobjectes.
-	 * @param center the wanted location of the center of the paddle
+	 *
+	 * @param center        the wanted location of the center of the paddle
 	 * @param collisionTags list of objects tags which paddle should collide with
-	 * @param collectableTags  list of objects tags which paddle can collect
 	 * @return Paddle
 	 */
-	private Paddle addPaddle(Vector2 center, String[] collisionTags, String[] collectableTags) {
+	private Paddle addPaddle(Vector2 center, String[] collisionTags) {
 		Renderable paddleImage = imageReader.readImage(
 				PADDLE_IMG_PATH, true);
 		Paddle paddle = new Paddle(
@@ -418,18 +426,13 @@ public class BrickerGameManager extends GameManager {
 	 * creating and adding extra peddle to gameobjects and setting the field
 	 */
 	public void addExtraPaddle() {
+		// Check if an extra paddle already exists
+		if (this.extraPaddle != null)
+			return;
 		Paddle extraPaddle = addPaddle(
 				(new Vector2(windowDimensions.x() / 2, windowDimensions.y() / 2)),
-				EXTRA_PADDLE_TAGS, null);
+				EXTRA_PADDLE_TAGS);
 		setExtraPaddle(extraPaddle);
-	}
-
-	/**
-	 * getter for extra paddle
-	 * @return extra paddle
-	 */
-	public Paddle getExtraPaddle() {
-		return extraPaddle;
 	}
 
 	/**

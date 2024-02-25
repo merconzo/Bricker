@@ -11,7 +11,6 @@ import danogl.util.Vector2;
 
 public class PuckCollisionStrategy extends BasicCollisionStrategy {
 
-    private static final String PUCK_IMG_PATH = "assets/mockBall.png";
     private static final int PUCKS_COUNT = 2;
 
 
@@ -41,9 +40,8 @@ public class PuckCollisionStrategy extends BasicCollisionStrategy {
      * @param center the center location of pucks
      */
     private void addPucks(Vector2 center) {
-        Renderable puckImg = gameManager.readImage(PUCK_IMG_PATH, true);
         for (int i = 0; i < PUCKS_COUNT; i++) {
-            gameManager.addPuckBalls(puckImg, center);
+            gameManager.addPuckBalls(center);
         }
     }
 
