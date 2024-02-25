@@ -13,7 +13,7 @@ public class Brick extends GameObject {
      */
     static public int totalNumberOfBricks = 0;
 
-    private CollisionStrategy collisionStrategy;
+    private final CollisionStrategy collisionStrategy;
 
 
     /**

@@ -64,7 +64,6 @@ public class BrickerGameManager extends GameManager {
 	private static final float FALLING_HEART_VELOCITY = 100;
 	// collisions tags
 	private static final String[] MAIN_PADDLE_TAGS = {PUCK_TAG, MAIN_BALL_TAG, HEART_TAG};
-	private static final String[] MAIN_PADDLE_COLLECTABLES = {HEART_TAG};
 	private static final String[] EXTRA_PADDLE_TAGS = {PUCK_TAG, MAIN_BALL_TAG};
 	private static final String[] HEART_TAGS = {MAIN_PADDLE_TAG};
 
@@ -196,8 +195,6 @@ public class BrickerGameManager extends GameManager {
 				return;
 			}
 		}
-		if(!extraObjectsList.isEmpty())
-			System.out.println(extraObjectsList.size());
 	}
 
 	/**
@@ -240,8 +237,8 @@ public class BrickerGameManager extends GameManager {
 		if (!prompt.isEmpty()) {
 			prompt += " Play again?";
 			if (windowController.openYesNoDialog(prompt)) {
-				clearTableBeforeNewGame(); //removes all extra objects (pucks, extra paddle, bricks that
-				// left)
+				// removes all extra objects (pucks, extra paddle, bricks that left)
+				clearTableBeforeNewGame();
 				windowController.resetGame();
 			} else
 				windowController.closeWindow();
@@ -254,8 +251,8 @@ public class BrickerGameManager extends GameManager {
 	private void clearTableBeforeNewGame() {
 		if (extraPaddle != null) {
 			removeGameObject(extraPaddle);
+			setExtraPaddle(null);
 		}
-		setExtraPaddle(null);
 		Brick.totalNumberOfBricks = 0;
 		for (GameObject object : extraObjectsList) {
 			gameObjects().removeGameObject(object);

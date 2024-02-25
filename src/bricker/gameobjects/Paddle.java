@@ -75,10 +75,6 @@ public class Paddle extends GameObject {
 	 */
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
-//		if (other instanceof Ball) {
-//			// TODO: maybe instanceof is bad, and we can use shouldCollide
-//			collisionCounter++;
-//		}
 		collisionCounter++;
 	}
 
