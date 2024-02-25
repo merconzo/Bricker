@@ -65,6 +65,8 @@ public class BrickerGameManager extends GameManager {
 	private static final String HEART_TAG = "heart";
 	private static final int NOT_STAMPED = -1;
 	private static final float FALLING_HEART_VELOCITY = 100;
+	private static final int MAX_LIFE = 4;
+	private static final int INIT_LIFE = 3;
 
 	// collisions tags
 	private static final String[] MAIN_PADDLE_TAGS = {PUCK_TAG, MAIN_BALL_TAG, HEART_TAG};
@@ -528,7 +530,7 @@ public class BrickerGameManager extends GameManager {
 				new Vector2(BORDER_WIDTH + COUNTER_DISTANCE,
 						(int) windowDimensions.y() - HEART_SIZE - COUNTER_DISTANCE),
 				new Vector2(HEART_SIZE, HEART_SIZE),
-				counterRenderable
+				counterRenderable, INIT_LIFE, MAX_LIFE
 		);
 		addGameObject(this.lifeNumericCounter, LIFE_COUNTER_LAYER);
 	}
@@ -566,17 +568,15 @@ public class BrickerGameManager extends GameManager {
 	}
 
 	/**
-	 * adding life counter presented by heart renderable
+	 * adding graphic life counter presented by heart renderable
 	 */
 	private void addLifeHeartsCounter() {
-		int maxLife = this.lifeNumericCounter.getMaxLife();
-		int lifeCount = this.lifeNumericCounter.getLifeCount();
 		this.lifeHeartsCounter = new LifeHeartsCounter(
-				this, LIFE_COUNTER_LAYER,
+				this,
 				new Vector2(BORDER_WIDTH + 2 * COUNTER_DISTANCE + HEART_SIZE,
 						(int) windowDimensions.y() - HEART_SIZE - COUNTER_DISTANCE),
-				HEART_SIZE, maxLife, lifeCount
-		); // creating new life heart counter
+				HEART_SIZE, INIT_LIFE, MAX_LIFE
+		);
 	}
 
 	/**

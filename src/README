@@ -15,50 +15,57 @@ ANSWERS:
     b) LifeCounter interface: indicates the API of a life counter (add/remove/set/get life points)
     c) LifeNumericCounter: numeric life counter, a game object that implements the LifeCounter interface.
         This is a text renderable that shows the current life points.
-        The BrickerGameManager creates an instance of it and adds it to the game.
     d) LifeHeartsCounter: graphic life counter, implements the LifeCounter interface.
         This is a class that creates an array of heart objects, when each heart represents a life point.
         The LifeHeartsCounter gets an instance of BrickerGameManager, and uses it to add the Heart objects to
         the GUI layer of the game.
         Practically, the counter controls the visibility of the hearts according to the current life points.
 
-    The BrickerGameManager adds the LifeNumericCounter, then uses it's values to create the LifeHeartsCounter
-    (so the numbers will be synchronized).
-    Finally, to control the counters, the game manager uses the LifeCounter API of the counters. Their are 2
-    public functions in the manager (plusLife(), minusLife()) that controls both of the counters together.
+    Adding the counters to the game:
+    BrickerGameManager creates an instance of LifeNumericCounter and adds it to the game, with the
+    wanted values of initial life points and maximal life points.
+    BrickerGameManager creates an instance of LifeHeartsCounter, with the same values as the numeric counter.
+    Finally, to control the counters, the game manager uses the LifeCounter API of the counters.
+    Their are 2 public functions in the manager (plusLife(), minusLife()) that controls both of the counters
+    together, so that the life counters will be synchronized.
 
 3. SPECIAL STRATEGIES:
-- Pucks - We have added a public method to GameManager that creates two balls according to the pucks' settings,
-          the strategy itself controls the number of balls to be added and the sending of the whitewash center.
-          GameManage keeps a list of the pucks added to the game and there is a method that checks if they have
-           gone out of the screen and if so removes them from the gameObjects.
-- Camera - At the beginning of the collision, onCollision checks if the collided object is the mainBall using its
-           tag getter, and also checks if the camera state is not already enabled.
-           If both conditions are met, a method is activated in gameManager that changes the focus of the camera
-           to the ball. There is a check method in GameManager that checks as part of the update
-           if there have been 4 collisions of the main ball since the change to the camera mode and returns the
-           situation to its original state if necessary.
-- Paddle - At the beginning of the collision, onCollision calls the addExtraPaddle method found in the GameManager.
-           The method checks if there is not already an extra paddle (in the extraPaddle field)
-           and if not adds the paddle to the screen and saves it in the field.
-           Additional methods check if there have been 4 collisions with the extra paddle
-           (by the getter of the counter defined in the paddle) and if so, it disappears from the screen
-           and returns the extraPaddle field to null.
-- Heart - At the beginning of the collision onCollision calls the addFallingHeart method.
-          The method creates a heart, one of whose fields is FallingHeartStrategy
-          - a strategy intended for a heart that when it collides with the central pedal will add life to the game.
+    - Pucks -
+        We have added a public method to GameManager that creates two balls according to the pucks' settings,
+        the strategy itself controls the number of balls to be added and the sending of the whitewash center.
+        GameManage keeps a list of the pucks added to the game and there is a method that checks if they have
+        gone out of the screen and if so removes them from the gameObjects.
+    - Camera -
+        At the beginning of the collision, onCollision checks if the collided object is the mainBall using its
+        tag getter, and also checks if the camera state is not already enabled.
+        If both conditions are met, a method is activated in gameManager that changes the focus of the camera
+        to the ball. There is a check method in GameManager that checks as part of the update
+        if there have been 4 collisions of the main ball since the change to the camera mode and returns the
+        situation to its original state if necessary.
+    - Paddle -
+        At the beginning of the collision, onCollision calls the addExtraPaddle method found in the
+        GameManager.
+        The method checks if there is not already an extra paddle (in the extraPaddle field)
+        and if not adds the paddle to the screen and saves it in the field.
+        Additional methods check if there have been 4 collisions with the extra paddle
+        (by the getter of the counter defined in the paddle) and if so, it disappears from the screen
+        and returns the extraPaddle field to null.
+    - Heart -
+        At the beginning of the collision, onCollision calls the addFallingHeart method.
+        The method creates a heart, with a field of FallingHeartStrategy - a strategy intended for a heart,
+        that when collides with the main paddle will add a life point to the player.
 
 4. DOUBLE STRATEGY
-            In the implementation we took care of the field in the factory that holds the maximum number of times that
-            the Double strategy can choose for one brick (in our game it is twice).
-            For each brick, the GameManager calls buildRandomStrategy() ->
-            uses the factory's constructor according to the enum received from getRandomStrategy().
-            This method takes a random from a list that contains all the strategies in an amount corresponding
-            to their probability and updates Counter if Double is selected.
-            If the Counter has reached the defined maximum,
-            the next time he creates the list from which a random strategy is chosen,
-            he will not insert the Double into it. The double strategy itself actually contains in onCollision
-            the two onCollision strategies of the strategies sent to it.
+    In the implementation we took care of the field in the factory that holds the maximum number of times that
+    the Double strategy can choose for one brick (in our game it is twice).
+    For each brick, the GameManager calls buildRandomStrategy() ->
+    uses the factory's constructor according to the enum received from getRandomStrategy().
+    This method takes a random from a list that contains all the strategies in an amount corresponding
+    to their probability and updates Counter if Double is selected.
+    If the Counter has reached the defined maximum,
+    the next time he creates the list from which a random strategy is chosen,
+    he will not insert the Double into it. The double strategy itself actually contains in onCollision
+    the two onCollision strategies of the strategies sent to it.
 
 5. API CHANGES in part 2:
     Paddle: we added some functions to support the behavior of the main & extra paddle:

@@ -1,6 +1,7 @@
 package bricker.gameobjects;
 
 import bricker.main.BrickerGameManager;
+import danogl.collisions.Layer;
 import danogl.util.Vector2;
 
 import static java.lang.Math.max;
@@ -17,15 +18,14 @@ public class LifeHeartsCounter implements LifeCounter {
 	/**
 	 * Constructor to initialize the LifeHeartsCounter.
 	 *
-	 * @param gameManager    The game manager.
-	 * @param layer          The layer of hearts.
-	 * @param topLeftCorner  The top-left corner position.
-	 * @param heartSize      The size of each heart.
-	 * @param maxLife        The maximum life count.
-	 * @param initLifeCount  The initial life count.
+	 * @param gameManager   The game manager.
+	 * @param topLeftCorner The top-left corner position.
+	 * @param heartSize     The size of each heart.
+	 * @param initLifeCount The initial life count.
+	 * @param maxLife       The maximum life count.
 	 */
-	public LifeHeartsCounter(BrickerGameManager gameManager, int layer,
-							 Vector2 topLeftCorner, int heartSize, int maxLife, int initLifeCount) {
+	public LifeHeartsCounter(BrickerGameManager gameManager,
+							 Vector2 topLeftCorner, int heartSize, int initLifeCount, int maxLife) {
 		this.lifeCount = max(initLifeCount, 1);  // 1 <= lifeCount
 		this.maxLife = max(maxLife, this.lifeCount);  // lifeCount <= maxLife
 		// create hearts
@@ -34,7 +34,7 @@ public class LifeHeartsCounter implements LifeCounter {
 			Vector2 curTopLeft = new Vector2(
 					topLeftCorner.x() + (heartSize + SPACE_BETWEEN_HEARTS) * i,
 					topLeftCorner.y());
-			this.hearts[i] = gameManager.createHeart(curTopLeft, layer, null, null);
+			this.hearts[i] = gameManager.createHeart(curTopLeft, Layer.UI, null, null);
 		}
 
 		// init visibility

@@ -11,38 +11,27 @@ import static java.lang.Math.max;
  * This is a game object that can be added to the game.
  */
 public class LifeNumericCounter extends GameObject implements LifeCounter {
-	private static final int MAX_LIFE = 4;
-	private static final int INIT_LIFE = 3;
 	private static final Color DEFAULT_COLOR = Color.GREEN;
 	private final TextRenderable renderable;
 	private final int maxLife;
 	private int lifeCount;
 
-	/**
-	 * Constructs a LifeNumericCounter with default initial and maximum life counts.
-	 *
-	 * @param topLeftCorner The top-left corner position of the counter.
-	 * @param dimensions    The dimensions of the counter.
-	 * @param renderable    The text renderable object for displaying the life count.
-	 */
-	public LifeNumericCounter(Vector2 topLeftCorner, Vector2 dimensions, TextRenderable renderable) {
-		this(topLeftCorner, dimensions, renderable, INIT_LIFE, MAX_LIFE);
-	}
+
 	/**
 	 * Constructs a LifeNumericCounter with custom initial and maximum life counts.
 	 *
 	 * @param topLeftCorner The top-left corner position of the counter.
 	 * @param dimensions    The dimensions of the counter.
 	 * @param renderable    The text renderable object for displaying the life count.
-	 * @param lifeCount     The initial number of lives.
+	 * @param initLifeCount     The initial number of lives.
 	 * @param maxLife       The maximum number of lives allowed.
 	 */
 	public LifeNumericCounter(Vector2 topLeftCorner, Vector2 dimensions, TextRenderable renderable,
-							  int lifeCount, int maxLife) {
+							  int initLifeCount, int maxLife) {
 		super(topLeftCorner, dimensions, renderable);
 		this.renderable = renderable;
-		this.lifeCount = max(lifeCount, 1);  // 1 <= lifeCount
-		this.maxLife = max(maxLife, this.lifeCount);  // lifeCount <= maxLife
+		this.lifeCount = max(initLifeCount, 1);  // 1 <= initLifeCount
+		this.maxLife = max(maxLife, this.lifeCount);  // initLifeCount <= maxLife
 		render();
 	}
 
