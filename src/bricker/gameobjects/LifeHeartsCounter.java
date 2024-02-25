@@ -29,8 +29,8 @@ public class LifeHeartsCounter implements LifeCounter {
 		this.lifeCount = max(initLifeCount, 1);  // 1 <= lifeCount
 		this.maxLife = max(maxLife, this.lifeCount);  // lifeCount <= maxLife
 		// create hearts
-		this.hearts = new Heart[maxLife];
-		for (int i = 0; i < maxLife; i++) {
+		this.hearts = new Heart[this.maxLife];
+		for (int i = 0; i < this.maxLife; i++) {
 			Vector2 curTopLeft = new Vector2(
 					topLeftCorner.x() + (heartSize + SPACE_BETWEEN_HEARTS) * i,
 					topLeftCorner.y());
