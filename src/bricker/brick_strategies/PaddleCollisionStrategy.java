@@ -1,28 +1,26 @@
 /**
- * PaddleCollisionStrategy represents a collision strategy that adds an extra paddle to the game upon collision.
+ * PaddleCollisionStrategy represents a collision strategy
+ * that adds an extra paddle to the game upon collision.
  * It extends BasicCollisionStrategy.
  */
 package bricker.brick_strategies;
 
-import bricker.gameobjects.Paddle;
+import bricker.main.BrickerGameManager;
 import danogl.GameObject;
-import danogl.collisions.GameObjectCollection;
-import danogl.util.Vector2;
 
+/**
+ * representing collision strategy which ads paddle
+ */
 public class PaddleCollisionStrategy extends BasicCollisionStrategy {
-    private final Vector2 windowDimensions;
 
     /**
      * Constructs a PaddleCollisionStrategy.
      *
-     * @param gameObjects      The game object collection.
+     * @param gameManager      The game manager.
      * @param object1Layer     The layer of the that has the collision strategy as a param.
-     * @param windowDimensions The dimensions of the game window for centering the paddle.
      */
-    public PaddleCollisionStrategy(GameObjectCollection gameObjects, int object1Layer,
-                                   Vector2 windowDimensions) {
-        super(gameObjects, object1Layer);
-        this.windowDimensions = windowDimensions;
+    public PaddleCollisionStrategy(BrickerGameManager gameManager, int object1Layer) {
+        super(gameManager, object1Layer);
     }
     /**
      * adds an extra paddle to the game upon collision.
@@ -33,14 +31,7 @@ public class PaddleCollisionStrategy extends BasicCollisionStrategy {
     @Override
     public void onCollision(GameObject object1, GameObject object2) {
         super.onCollision(object1, object2);
-        // Check if an extra paddle already exists TODO: static functions etc.
-        if (bricker.main.BrickerGameManager.getExtraPaddle() == null) {
-            Paddle extraPaddle = bricker.main.BrickerGameManager.createPaddle(windowDimensions);
-            // Set the position of paddle at the center
-            extraPaddle.setCenter((new Vector2(windowDimensions.x() / 2, windowDimensions.y() / 2)));
-            gameObjects.addGameObject(extraPaddle); //adding game
-
-        }
+        super.gameManager.addExtraPaddle();
     }
 
 

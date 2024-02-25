@@ -6,8 +6,10 @@ import danogl.gui.Sound;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+/**
+ * class represents a Ball object
+ */
 public class Ball extends GameObject {
-//    private static final String BALL_TAG = "ball";
     private final Sound collisionSound;
     private int collisionCounter = 0;
 
@@ -23,9 +25,15 @@ public class Ball extends GameObject {
                     Sound collisionSound) {
         super(topLeftCorner, dimensions, renderable);
         this.collisionSound = collisionSound;
-//        this.setTag(BALL_TAG);
     }
 
+    /**
+     *
+     * @param other The GameObject with which a collision occurred.
+     * @param collision Collision
+     * on collision enter flipping the ball direction, playing collision sound, counting the collision.
+     *
+     */
     @Override
     public void onCollisionEnter(GameObject other, Collision collision) {
         super.onCollisionEnter(other, collision);
@@ -35,6 +43,10 @@ public class Ball extends GameObject {
         collisionCounter++;
     }
 
+    /**
+     *
+     * @return collision counter
+     */
     public int getCollisionCounter() {
         return collisionCounter;
     }

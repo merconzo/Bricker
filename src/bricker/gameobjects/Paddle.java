@@ -7,13 +7,18 @@ import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collections;
 
+/**
+ * representing paddle game object
+ */
 public class Paddle extends GameObject {
 	private static final float MOVEMENT_SPEED = 500;
 	private final UserInputListener inputListener;
 	private final Vector2 windowDimensions;
 	private final int bordersWidth;
-
+	private final ArrayList<String> collisionTagsList = new ArrayList<>();
 	private int collisionCounter = 0;
 
 	/**
@@ -28,13 +33,19 @@ public class Paddle extends GameObject {
 	 */
 	public Paddle(Vector2 topLeftCorner, Vector2 dimensions,
 				  Renderable renderable, UserInputListener inputListener, Vector2 windowDimensions,
-                  int bordersWidth) {
+                  int bordersWidth, String[] collisionTags) {
 		super(topLeftCorner, dimensions, renderable);
 		this.inputListener = inputListener;
 		this.windowDimensions = windowDimensions;
 		this.bordersWidth = bordersWidth;
+		if (collisionTags != null)
+			Collections.addAll(this.collisionTagsList, collisionTags);
 	}
 
+	/**
+	 * updating the padlle location du to input listener and borders location.
+	 * @param deltaTime The time elapsed, in seconds, since the last frame.
+	 */
 	@Override
 	public void update(float deltaTime) {
 		super.update(deltaTime);
@@ -59,21 +70,34 @@ public class Paddle extends GameObject {
 		}
 	}
 
+	/**
+	 * counting collision while enter
+	 * @param other The GameObject with which a collision occurred.
+	 * @param collision Information regarding this collision.
+	 */
 	@Override
 	public void onCollisionEnter(GameObject other, Collision collision) {
-		super.onCollisionEnter(other, collision);
-		if (other instanceof Ball) {
-			// TODO: maybe instanceof is bad, and we can use shouldCollide
-			collisionCounter++;
-		}
-
+		collisionCounter++;
 	}
 
+	/**
+	 * checks if the given object should collide with the paddle
+	 * @param other The other GameObject.
+	 * @return true/false
+	 */
+	@Override
+	public boolean shouldCollideWith(GameObject other) {
+		return collisionTagsList.contains(other.getTag());
+	}
+
+
+	/**
+	 *
+	 * @return collisionCounter
+	 */
 	public int getCollisionCounter() {
 		return collisionCounter;
 	}
 
-	public void setCollisionCounter(int collisionCounter) {
-		this.collisionCounter = collisionCounter;
-	}
+
 }
