@@ -3,7 +3,7 @@
  * the heart is falling and only if it is caught by the main paddle it will be added to life count
  * It extends BasicCollisionStrategy.
  */
-package bricker.brick_strategies;
+package bricker.strategies;
 
 
 import bricker.main.BrickerGameManager;

@@ -1,4 +1,4 @@
-package bricker.brick_strategies;
+package bricker.strategies;
 
 // Enum to represent different brick strategies
 public enum Strategy {
@@ -8,9 +8,10 @@ public enum Strategy {
 	PUCK(0.1),
 	CAMERA(0.1),
 	DOUBLE(0.1),
-	LIFE(0.1);
+	LIFE(0.1),
+	FALLING_HEART(0);
 
-	private final double probability; //represents the strategy probability to be chosen
+	private final double probability; //represents the strategy probability to be chosen by brick
 
 	private Strategy(double probability) {
 		this.probability = probability;

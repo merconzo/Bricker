@@ -1,4 +1,4 @@
-package bricker.brick_strategies;
+package bricker.strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.util.Counter;
@@ -59,6 +59,8 @@ public class StrategiesFactory {
 	 */
 	private CollisionStrategy getNewCollisionStrategy(Strategy strategy) {
 		switch (strategy) {
+		case FALLING_HEART:
+			return createFallingHeartStrategy();
 		case LIFE:
 			return createLifeStrategy();
 		case PADDLE:
@@ -72,6 +74,10 @@ public class StrategiesFactory {
 		default:
 			return createBasicStrategy();
 		}
+	}
+
+	private CollisionStrategy createFallingHeartStrategy() {
+		return new FallingHeartStrategy(gameManager, object1Layer);
 	}
 
 	/**

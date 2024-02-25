@@ -3,7 +3,7 @@
  * the first collied object (usually brick) disappears.
  * It implements the CollisionStrategy interface.
  */
-package bricker.brick_strategies;
+package bricker.strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;

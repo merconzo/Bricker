@@ -1,14 +1,18 @@
 package bricker.gameobjects;
 
-import bricker.brick_strategies.CollisionStrategy;
+import bricker.strategies.CollisionStrategy;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
 import danogl.util.Vector2;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class Heart extends GameObject {
 	private final Renderable image;
 	private final CollisionStrategy collisionStrategy;
+	private final ArrayList<String> collisionTagsList = new ArrayList<>();
 
 	/**
 	 * Constructor to initialize the Heart object.
@@ -17,10 +21,13 @@ public class Heart extends GameObject {
 	 * @param dimensions    The dimensions of the heart.
 	 * @param renderable    The renderable image for the heart.
 	 */
-	public Heart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable, CollisionStrategy collisionStrategy) {
+	public Heart(Vector2 topLeftCorner, Vector2 dimensions, Renderable renderable,
+				 CollisionStrategy collisionStrategy, String[] collisionTags) {
 		super(topLeftCorner, dimensions, renderable);
 		this.image = renderable;
         this.collisionStrategy = collisionStrategy;
+		if (collisionTags != null)
+			Collections.addAll(this.collisionTagsList, collisionTags);
     }
 	/**
 	 * Sets the visibility of the heart.
@@ -48,5 +55,13 @@ public class Heart extends GameObject {
 			this.collisionStrategy.onCollision(this, other);
 	}
 
-
+	/**
+	 * checks if the given object should collide with the heart.
+	 * @param other The other GameObject.
+	 * @return true/false
+	 */
+	@Override
+	public boolean shouldCollideWith(GameObject other) {
+		return collisionTagsList.contains(other.getTag());
+	}
 }

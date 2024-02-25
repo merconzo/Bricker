@@ -2,7 +2,7 @@
 * PuckCollisionStrategy represents a collision strategy that putting extra 2 Balls (named pucks) objects in the game.
 * It extends BasicCollisionStrategy and handles collisions involving puck objects.
  */
-package bricker.brick_strategies;
+package bricker.strategies;
 
 import bricker.main.BrickerGameManager;
 import danogl.GameObject;

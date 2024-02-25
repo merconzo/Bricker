@@ -1,4 +1,4 @@
-package bricker.brick_strategies;
+package bricker.strategies;
 
 import danogl.GameObject;
 

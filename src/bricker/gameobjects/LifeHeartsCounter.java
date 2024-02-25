@@ -34,7 +34,7 @@ public class LifeHeartsCounter implements LifeCounter {
 			Vector2 curTopLeft = new Vector2(
 					topLeftCorner.x() + (heartSize + SPACE_BETWEEN_HEARTS) * i,
 					topLeftCorner.y());
-			this.hearts[i] = gameManager.createHeart(curTopLeft, layer, null);
+			this.hearts[i] = gameManager.createHeart(curTopLeft, layer, null, null);
 		}
 
 		// init visibility

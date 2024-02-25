@@ -1,6 +1,6 @@
 package bricker.gameobjects;
 
-import bricker.brick_strategies.CollisionStrategy;
+import bricker.strategies.CollisionStrategy;
 import danogl.GameObject;
 import danogl.collisions.Collision;
 import danogl.gui.rendering.Renderable;
@@ -31,13 +31,6 @@ public class Brick extends GameObject {
         totalNumberOfBricks++;
     }
 
-//    /**
-//     * setter for collision strategy
-//     * @param collisionStrategy
-//     */
-//    public void setCollisionStrategy(CollisionStrategy collisionStrategy) {
-//        this.collisionStrategy = collisionStrategy;
-//    }
 
     /**
      * Method called when a collision occurs with this brick.
